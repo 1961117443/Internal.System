@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Internal.App</name>
+    </assembly>
+    <members>
+        <!-- 对于成员“T:Internal.App.Controllers.DemandController”忽略有格式错误的 XML 注释 -->
+        <member name="M:Internal.App.Controllers.DemandController.Get(System.Int32)">
+            <summary>
+            获取 需求或者bug
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.Entity.Demand)">
+            <summary>
+            提交需求
+            </summary>
+            <param name="demand"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
