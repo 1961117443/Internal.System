@@ -8,4 +8,9 @@
     <DocumentationFile>E:\code\InternalSystem\Internal.App\bin\Debug\netcoreapp2.2\Internal.Data.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="sqlSugarCore" Version="5.0.0.6" />
+  </ItemGroup>
+
 </Project>

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Internal.Data.Entity
+namespace Internal.Data.ViewModel
 {
-    public class Demand
-    {
-        /// <summary>
-        /// 主键
-        /// </summary>
+    public class DemandViewModel
+    {/// <summary>
+     /// 主键
+     /// </summary>
         public Guid ID { get; set; }
         /// <summary>
         /// 单据编号
@@ -19,6 +17,9 @@ namespace Internal.Data.Entity
         /// 客户id
         /// </summary>
         public Guid CustomerID { get; set; }
+        public string CustomerIDCode { get; set; }
+        public string CustomerIDName { get; set; }
+
         /// <summary>
         /// 录入日期
         /// </summary>
@@ -35,9 +36,5 @@ namespace Internal.Data.Entity
         /// 制单日期
         /// </summary>
         public DateTime MakeDate { get; set; }
-
-        [SqlSugar.SugarColumn(IsIgnore = true)]
-        [ForeignKey("CustomerID")]
-        public virtual Customer Customer { get;set;}
     }
 }

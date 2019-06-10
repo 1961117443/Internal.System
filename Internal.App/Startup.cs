@@ -15,12 +15,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
+using AutoMapper;
+using System.Linq.Expressions;
+using Internal.Data.Entity;
 
 namespace Internal.App
 {
     public class Startup
     {
+        public void test()
+        {
+            Expression<Func<Demand, Customer>> mapperObject = e => e.Customer;
+            Expression<Func<Demand, object>> mapperField = e => e.CustomerID;
+        }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +40,18 @@ namespace Internal.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opt=>
+                {
+                    //使用默认方式，不更改元数据的key的大小写
+                    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                });
+
+            #region AutoMapper 先注册autoMapper 在使用autofac框架托管
+            services.AddAutoMapper(Assembly.Load("Internal.Data"));
+            #endregion
+
             #region Swagger
             services.AddSwaggerGen(c =>
             {
@@ -43,8 +63,8 @@ namespace Internal.App
                     TermsOfService = "None",
                     Contact = new Contact { Name = "Internal.System", Email = "", Url = "" }
                 });
-            });
-
+            });  
+            #endregion
             #region CORS
             //跨域第二种方法，声明策略，记得下边app中配置
             services.AddCors(c =>
@@ -73,11 +93,7 @@ namespace Internal.App
 
             //跨域 注意下边 Configure方法 中进行配置
             //services.AddCors();
-            #endregion
-
-            #endregion
-
-
+            #endregion 
             #region AutoFac
 
             //实例化 AutoFac  容器   
@@ -116,7 +132,7 @@ namespace Internal.App
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiHelp V1");
             });
             #endregion
-
+              
 
             app.UseMvc();
         }

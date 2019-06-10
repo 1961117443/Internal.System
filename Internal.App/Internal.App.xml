@@ -5,7 +5,7 @@
     </assembly>
     <members>
         <!-- 对于成员“T:Internal.App.Controllers.DemandController”忽略有格式错误的 XML 注释 -->
-        <member name="M:Internal.App.Controllers.DemandController.Get(System.Int32)">
+        <member name="M:Internal.App.Controllers.DemandController.Get(System.String)">
             <summary>
             获取 需求或者bug
             </summary>

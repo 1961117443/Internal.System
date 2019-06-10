@@ -1,8 +1,11 @@
-﻿using Internal.IRepository;
+﻿using Internal.Data.Entity;
+using Internal.IRepository; 
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -63,22 +66,53 @@ namespace Internal.Repository.SqlServer
         {
             int r = await db.Deleteable<TEntity>().In(ids).ExecuteCommandAsync();
             return r > 0;
-        } 
+        }
         #endregion
 
+        /// <summary>
+        /// 统一的查询入库
+        /// </summary>
+        /// <param name="enablefk">填充外键关联的实体</param>
+        /// <returns></returns>
+        protected virtual ISugarQueryable<TEntity> GetQueryable()
+        {
+            var q = db.Queryable<TEntity>();
+
+
+            foreach (var p in typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                var fk = p.GetCustomAttribute<ForeignKeyAttribute>();
+                if (fk!=null)
+                {
+                    if (p.PropertyType.Equals(typeof(Customer)))
+                    {
+                        ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "e");
+                        Expression<Func<TEntity, Customer>> mapperObject = Expression.Lambda<Func<TEntity, Customer>>(Expression.Property(parameterExpression, p), parameterExpression);
+                        parameterExpression = Expression.Parameter(typeof(TEntity), "e");
+                        Expression<Func<TEntity, object>> mapperField = Expression.Lambda<Func<TEntity, object>>(Expression.Convert(Expression.Property(parameterExpression, fk.Name), typeof(object)), parameterExpression);
+                        //Expression<Func<TEntity, TObject>> mapperObject, Expression< Func<T, object> > mapperField
+                        q = q.Mapper(mapperObject, mapperField);
+                    }
+                   
+                }
+            }
+
+
+            return q;
+        }
         #region 查询
         public async Task<TEntity> QueryByID(object objId)
         {
-            return await db.Queryable<TEntity>().InSingleAsync(objId);
+            return await GetQueryable().InSingleAsync(objId);
         }
         public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await db.Queryable<TEntity>().WhereIF(whereExpression != null, whereExpression).ToListAsync(); 
+            return await GetQueryable().WhereIF(whereExpression != null, whereExpression).ToListAsync(); 
         }
 
         public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, string strOrderByFileds)
         {
-            return await db.Queryable<TEntity>()
+            return await GetQueryable()
                 .WhereIF(whereExpression != null, whereExpression)
                 .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
                 .ToListAsync();
@@ -87,7 +121,7 @@ namespace Internal.Repository.SqlServer
 
         public async Task<List<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, string strOrderByFileds = null)
         {
-            return await db.Queryable<TEntity>()
+            return await GetQueryable()
              .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
              .WhereIF(whereExpression != null, whereExpression)
              .ToPageListAsync(intPageIndex, intPageSize);

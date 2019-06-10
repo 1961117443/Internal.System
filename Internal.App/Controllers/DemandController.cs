@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Internal.Common.Core;
 using Internal.Data.Entity;
+using Internal.Data.ViewModel;
 using Internal.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +17,15 @@ namespace Internal.App.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class DemandController : Controller
+    public class DemandController : BaseController
     {
-        private readonly IDemandService demandService;
+        private readonly IDemandService _demandService;
+        private readonly IMapper _mapper;
 
-        public DemandController(IDemandService demandService)
+        public DemandController(IDemandService demandService,IMapper mapper)
         {
-            this.demandService = demandService;
+            this._demandService = demandService;
+            this._mapper = mapper;
         }
 
         /// <summary>
@@ -30,9 +34,10 @@ namespace Internal.App.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(string id)
         {
-            var list = await demandService.QueryPage(null);
+            var list = await _demandService.QueryPage(null);
+            var data = _mapper.Map<List<DemandViewModel>>(list);
             Demand d = new Demand()
             {
                 BillCode = "123",
@@ -41,7 +46,7 @@ namespace Internal.App.Controllers
                 Maker = "admin",
                 Presenter = "admin",
                 RecordDate = DateTime.Now
-            };
+            }; 
             return Json(new ResultData<Demand>() { Data = d });
         }
         /// <summary>
@@ -49,7 +54,7 @@ namespace Internal.App.Controllers
         /// </summary>
         /// <param name="demand"></param>
         /// <returns></returns>
-        [HttpPost("api/post")]
+        [HttpPost("post")]
         public IActionResult Post(Demand demand)
         {
             ResultData result = new ResultData()
