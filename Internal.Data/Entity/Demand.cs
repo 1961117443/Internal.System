@@ -7,6 +7,10 @@ namespace Internal.Data.Entity
     public class Demand
     {
         /// <summary>
+        /// 主键
+        /// </summary>
+        public Guid ID { get; set; }
+        /// <summary>
         /// 单据编号
         /// </summary>
         public string BillCode { get; set; }

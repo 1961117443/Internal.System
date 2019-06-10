@@ -2,14 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>Internal.Service</RootNamespace>
+    <RootNamespace>Internal.Repository.SqlServer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Internal.Common\Internal.Common.csproj" />
+    <PackageReference Include="sqlSugarCore" Version="5.0.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Internal.Data\Internal.Data.csproj" />
     <ProjectReference Include="..\Internal.IRepository\Internal.IRepository.csproj" />
-    <ProjectReference Include="..\Internal.IService\Internal.IService.csproj" />
   </ItemGroup>
 
 </Project>

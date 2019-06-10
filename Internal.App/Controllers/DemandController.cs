@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Internal.Common.Core;
 using Internal.Data.Entity;
+using Internal.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +17,22 @@ namespace Internal.App.Controllers
     [ApiController]
     public class DemandController : Controller
     {
+        private readonly IDemandService demandService;
+
+        public DemandController(IDemandService demandService)
+        {
+            this.demandService = demandService;
+        }
+
         /// <summary>
         /// 获取 需求或者bug
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
+            var list = await demandService.QueryPage(null);
             Demand d = new Demand()
             {
                 BillCode = "123",

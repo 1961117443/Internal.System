@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Internal.IRepository;
+using Internal.IService;
+using Internal.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,9 +29,9 @@ namespace Internal.App
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);  
             #region Swagger
             services.AddSwaggerGen(c =>
             {
@@ -70,6 +76,29 @@ namespace Internal.App
             #endregion
 
             #endregion
+
+
+            #region AutoFac
+
+            //实例化 AutoFac  容器   
+            var builder = new ContainerBuilder();
+
+            //注册要通过反射创建的组件
+            //builder.RegisterType<DemandService>().As<IDemandService>();
+            var assemblysServices = Assembly.Load("Internal.Service");//要记得!!!这个注入的是实现类层，不是接口层！不是 IServices
+            builder.RegisterAssemblyTypes(assemblysServices).AsImplementedInterfaces();//指定已扫描程序集中的类型注册为提供所有其实现的接口。
+            var assemblysRepository = Assembly.Load("Internal.Repository.SqlServer");//模式是 Load(解决方案名)
+            builder.RegisterAssemblyTypes(assemblysRepository).AsImplementedInterfaces();
+
+            //将services填充到Autofac容器生成器中
+            builder.Populate(services);
+
+            //使用已进行的组件登记创建新容器
+            var ApplicationContainer = builder.Build();
+
+            #endregion
+
+            return new AutofacServiceProvider(ApplicationContainer);//第三方IOC接管 core内置DI容器
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

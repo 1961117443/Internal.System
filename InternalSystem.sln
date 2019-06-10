@@ -3,15 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.Data", "Internal.Data\Internal.Data.csproj", "{6A48560A-5436-432D-913E-99868E29097E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.Data", "Internal.Data\Internal.Data.csproj", "{6A48560A-5436-432D-913E-99868E29097E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.Common", "Internal.Common\Internal.Common.csproj", "{2A1F464B-6713-49D6-A98C-9AC601E5437E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.Common", "Internal.Common\Internal.Common.csproj", "{2A1F464B-6713-49D6-A98C-9AC601E5437E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.IService", "Internal.IService\Internal.IService.csproj", "{0D04C3AF-B778-44B7-8716-380882FBCB64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.IService", "Internal.IService\Internal.IService.csproj", "{0D04C3AF-B778-44B7-8716-380882FBCB64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.Service", "Internal.Service\Internal.Service.csproj", "{F58FD3DC-8029-4DF1-AFD1-2C53A76A1E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.Service", "Internal.Service\Internal.Service.csproj", "{F58FD3DC-8029-4DF1-AFD1-2C53A76A1E93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.App", "Internal.App\Internal.App.csproj", "{58BCE7C7-CC11-4185-9003-5C46725FE350}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.App", "Internal.App\Internal.App.csproj", "{58BCE7C7-CC11-4185-9003-5C46725FE350}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.服务层", "03.服务层", "{A067FD9E-ADDF-40EA-BD09-8D110F52AAB6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.数据模型", "02.数据模型", "{C1CFF8BB-08F5-4905-989B-C45C2E559124}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.应用层", "01.应用层", "{E6B10396-7869-4ECF-9D95-049CCB266A7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.仓储层", "04.仓储层", "{2E0737C9-FE34-4BCB-AD7D-5183CFD8BC23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.IRepository", "Internal.IRepository\Internal.IRepository.csproj", "{35612AEB-F45F-4C60-87D9-54F7AABF93E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.Repository.SqlServer", "Internal.Repository.SqlServer\Internal.Repository.SqlServer.csproj", "{1079BF95-FEB0-4B21-A354-D85F442E5817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +51,25 @@ Global
 		{58BCE7C7-CC11-4185-9003-5C46725FE350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58BCE7C7-CC11-4185-9003-5C46725FE350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58BCE7C7-CC11-4185-9003-5C46725FE350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35612AEB-F45F-4C60-87D9-54F7AABF93E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35612AEB-F45F-4C60-87D9-54F7AABF93E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35612AEB-F45F-4C60-87D9-54F7AABF93E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35612AEB-F45F-4C60-87D9-54F7AABF93E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1079BF95-FEB0-4B21-A354-D85F442E5817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1079BF95-FEB0-4B21-A354-D85F442E5817}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1079BF95-FEB0-4B21-A354-D85F442E5817}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1079BF95-FEB0-4B21-A354-D85F442E5817}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6A48560A-5436-432D-913E-99868E29097E} = {C1CFF8BB-08F5-4905-989B-C45C2E559124}
+		{0D04C3AF-B778-44B7-8716-380882FBCB64} = {A067FD9E-ADDF-40EA-BD09-8D110F52AAB6}
+		{F58FD3DC-8029-4DF1-AFD1-2C53A76A1E93} = {A067FD9E-ADDF-40EA-BD09-8D110F52AAB6}
+		{58BCE7C7-CC11-4185-9003-5C46725FE350} = {E6B10396-7869-4ECF-9D95-049CCB266A7C}
+		{35612AEB-F45F-4C60-87D9-54F7AABF93E2} = {2E0737C9-FE34-4BCB-AD7D-5183CFD8BC23}
+		{1079BF95-FEB0-4B21-A354-D85F442E5817} = {2E0737C9-FE34-4BCB-AD7D-5183CFD8BC23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A6E1037-9426-43BC-ACA5-0285B0681D12}
