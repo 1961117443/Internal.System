@@ -74,11 +74,11 @@ namespace Internal.Repository.SqlServer
         /// </summary>
         /// <param name="enablefk">填充外键关联的实体</param>
         /// <returns></returns>
-        protected virtual ISugarQueryable<TEntity> GetQueryable()
+        protected virtual ISugarQueryable<TEntity> GetSelect()
         {
             var q = db.Queryable<TEntity>();
 
-
+            /*
             foreach (var p in typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 var fk = p.GetCustomAttribute<ForeignKeyAttribute>();
@@ -96,23 +96,23 @@ namespace Internal.Repository.SqlServer
                    
                 }
             }
-
+            */
 
             return q;
         }
         #region 查询
         public async Task<TEntity> QueryByID(object objId)
         {
-            return await GetQueryable().InSingleAsync(objId);
+            return await GetSelect().InSingleAsync(objId);
         }
         public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await GetQueryable().WhereIF(whereExpression != null, whereExpression).ToListAsync(); 
+            return await GetSelect().WhereIF(whereExpression != null, whereExpression).ToListAsync(); 
         }
 
         public async Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, string strOrderByFileds)
         {
-            return await GetQueryable()
+            return await GetSelect()
                 .WhereIF(whereExpression != null, whereExpression)
                 .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
                 .ToListAsync();
@@ -121,7 +121,7 @@ namespace Internal.Repository.SqlServer
 
         public async Task<List<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, string strOrderByFileds = null)
         {
-            return await GetQueryable()
+            return await GetSelect()
              .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
              .WhereIF(whereExpression != null, whereExpression)
              .ToPageListAsync(intPageIndex, intPageSize);

@@ -9,8 +9,17 @@ using System.Linq.Expressions;
 
 namespace Internal.Repository.SqlServer
 {
+    /// <summary>
+    /// 需求录入访问层
+    /// </summary>
     public class DemandRepository :BaseRepository<Demand>, IDemandRepository
     {
+        protected override ISugarQueryable<Demand> GetSelect()
+        {
+            var q = Db.Queryable<Demand>()
+                .Mapper(e => e.Customer, e => e.CustomerID);
+            return q;
+        }
         //protected override ISugarQueryable<Demand> GetQueryable()
         //{
         //    var q= base.GetQueryable();

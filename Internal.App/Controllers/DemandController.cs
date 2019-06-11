@@ -36,18 +36,8 @@ namespace Internal.App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var list = await _demandService.QueryPage(null);
-            var data = _mapper.Map<List<DemandViewModel>>(list);
-            Demand d = new Demand()
-            {
-                BillCode = "123",
-                CustomerID = Guid.NewGuid(),
-                MakeDate = DateTime.Now,
-                Maker = "admin",
-                Presenter = "admin",
-                RecordDate = DateTime.Now
-            }; 
-            return Json(new ResultData<Demand>() { Data = d });
+            var vd = await _demandService.QueryPage(w=>w.ID.Equals(id)); 
+            return SuccessResult(vd);
         }
         /// <summary>
         /// 提交需求
@@ -55,14 +45,59 @@ namespace Internal.App.Controllers
         /// <param name="demand"></param>
         /// <returns></returns>
         [HttpPost("post")]
-        public IActionResult Post(Demand demand)
+        public async Task<IActionResult> Post([FromBody]DemandViewModel demand)
+        { 
+
+            return SuccessResult("保存成功");
+        }
+
+        /// <summary>
+        /// 获取需求列表
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpGet(Name ="list")]
+        public async Task<IActionResult> GetPageList(int pageIndex,int pageSize)
         {
-            ResultData result = new ResultData()
-            {
-                Status = 0,
-                Message = "成功"
-            };
-            return   Json(result);
+            var list = await _demandService.QueryPage(null,pageIndex,pageSize);
+            var data = _mapper.Map<List<DemandViewModel>>(list);
+            return SuccessResult(data);
+        } 
+
+        /// <summary>
+        /// 录入需求
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns> 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] DemandViewModel demand)
+        {
+            return SuccessResult("保存成功");
+        }
+
+        /// <summary>
+        /// 需求审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <returns></returns> 
+        [HttpPut(Name ="audit")]
+        public async Task<IActionResult> Audit(string id)
+        {
+            return SuccessResult("审核成功");
+        }
+
+        /// <summary>
+        /// 需求反审
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns> 
+        [HttpPut(Name = "unaudit")]
+        public async Task<IActionResult> UnAudit(string id)
+        {
+            return SuccessResult("反审成功");
         }
     }
 }

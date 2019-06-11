@@ -19,5 +19,13 @@
             <param name="demand"></param>
             <returns></returns>
         </member>
+        <member name="M:Internal.App.Controllers.DemandController.GetPageList(System.Int32,System.Int32)">
+            <summary>
+            获取需求列表
+            </summary>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>
