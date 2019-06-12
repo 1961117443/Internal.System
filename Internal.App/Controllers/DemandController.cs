@@ -36,8 +36,8 @@ namespace Internal.App.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var vd = await _demandService.QueryPage(w=>w.ID.Equals(id)); 
-            return SuccessResult(vd);
+            var vd = await _demandService.QueryByID(id); 
+            return ApiResult(vd);
         }
         /// <summary>
         /// 提交需求
@@ -48,7 +48,7 @@ namespace Internal.App.Controllers
         public async Task<IActionResult> Post([FromBody]DemandViewModel demand)
         { 
 
-            return SuccessResult("保存成功");
+            return ApiResult("保存成功");
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace Internal.App.Controllers
         /// <param name="pageIndex"></param>
         /// <param name="pageSize"></param>
         /// <returns></returns>
-        [HttpGet(Name ="list")]
+        [HttpGet("list")]
         public async Task<IActionResult> GetPageList(int pageIndex,int pageSize)
         {
             var list = await _demandService.QueryPage(null,pageIndex,pageSize);
-            var data = _mapper.Map<List<DemandViewModel>>(list);
-            return SuccessResult(data);
-        } 
+            var data = _mapper.Map<List<DemandCardModel>>(list);
+            return ApiResult(data);
+        }
 
         /// <summary>
         /// 录入需求
@@ -74,7 +74,7 @@ namespace Internal.App.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] DemandViewModel demand)
         {
-            return SuccessResult("保存成功");
+            return ApiResult("保存成功");
         }
 
         /// <summary>
@@ -83,10 +83,10 @@ namespace Internal.App.Controllers
         /// <param name="id"></param>
         /// <param name="value"></param>
         /// <returns></returns> 
-        [HttpPut(Name ="audit")]
+        [HttpPost("audit")]
         public async Task<IActionResult> Audit(string id)
         {
-            return SuccessResult("审核成功");
+            return ApiResult("审核成功");
         }
 
         /// <summary>
@@ -94,10 +94,21 @@ namespace Internal.App.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns> 
-        [HttpPut(Name = "unaudit")]
+        [HttpPost("unaudit")]
         public async Task<IActionResult> UnAudit(string id)
         {
-            return SuccessResult("反审成功");
+            return ApiResult("反审成功");
+        }
+
+        /// <summary>
+        /// 删除需求
+        /// </summary>
+        /// <param name="id"></param>
+        // DELETE api/demand/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            return ApiResult("删除成功！");
         }
     }
 }

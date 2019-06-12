@@ -11,7 +11,7 @@ namespace Internal.App.Controllers
     public abstract class BaseController : Controller
     {
         #region 返回自动定义的数据格式
-        protected IActionResult SuccessResult(string msg)
+        protected IActionResult ApiResult(string msg)
         {
             ResultMessage result = new ResultMessage()
             {
@@ -20,7 +20,7 @@ namespace Internal.App.Controllers
             };
             return Json(result);
         }
-        protected IActionResult SuccessResult<T>(T data, string msg = "")
+        protected IActionResult ApiResult<T>(T data, string msg = "")
         {
             ResultMessage<T> result = new ResultMessage<T>()
             {

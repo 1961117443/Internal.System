@@ -11,8 +11,15 @@ namespace Internal.Data
     {
         public EntityToViewProfile()
         {
+            #region Demand 需求录入
             CreateMap<Demand, DemandViewModel>()
-                .ForMember(t => t.CustomerIDCode, m => m.MapFrom(s => s.Customer.Code));
+                    .ForMember(t => t.CustomerIDCode, m => m.MapFrom(s => s.Customer.Code))
+                    .ForMember(t => t.CustomerIDName, m => m.MapFrom(s => s.Customer.Name));
+
+            CreateMap<Demand, DemandCardModel>()
+                .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name))
+                .ForMember(t => t.InputDate, m => m.MapFrom(s => s.RecordDate)); 
+            #endregion
         }
     }
 }

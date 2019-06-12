@@ -12,7 +12,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.Entity.Demand)">
+        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandViewModel)">
             <summary>
             提交需求
             </summary>
@@ -26,6 +26,35 @@
             <param name="pageIndex"></param>
             <param name="pageSize"></param>
             <returns></returns>
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.Put(System.Int32,Internal.Data.ViewModel.DemandViewModel)">
+            <summary>
+            录入需求
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+            <returns></returns> 
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.Audit(System.String)">
+            <summary>
+            需求审核
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+            <returns></returns> 
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.UnAudit(System.String)">
+            <summary>
+            需求反审
+            </summary>
+            <param name="id"></param>
+            <returns></returns> 
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.Delete(System.String)">
+            <summary>
+            删除需求
+            </summary>
+            <param name="id"></param>
         </member>
     </members>
 </doc>

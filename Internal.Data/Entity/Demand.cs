@@ -36,6 +36,11 @@ namespace Internal.Data.Entity
         /// </summary>
         public DateTime MakeDate { get; set; }
 
+        /// <summary>
+        /// 需求描述
+        /// </summary>
+        public string Describe { get; set; }
+
         [SqlSugar.SugarColumn(IsIgnore = true)]
         [ForeignKey("CustomerID")]
         public virtual Customer Customer { get;set;}

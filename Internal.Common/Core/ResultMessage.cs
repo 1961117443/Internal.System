@@ -10,7 +10,7 @@ namespace Internal.Common.Core
         public string Message { get; set; }
         public ResultMessage()
         {
-            Status = 0;
+            Status = ApiResultStatus.OK;
         }
     }
 
