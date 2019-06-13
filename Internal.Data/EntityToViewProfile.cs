@@ -18,7 +18,10 @@ namespace Internal.Data
 
             CreateMap<Demand, DemandCardModel>()
                 .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name))
-                .ForMember(t => t.InputDate, m => m.MapFrom(s => s.RecordDate)); 
+                .ForMember(t => t.InputDate, m => m.MapFrom(s => s.RecordDate));
+
+            CreateMap<Demand, DemandEditModel>()
+                .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name));
             #endregion
         }
     }

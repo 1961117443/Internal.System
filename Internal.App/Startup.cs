@@ -20,6 +20,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using System.Linq.Expressions;
 using Internal.Data.Entity;
+using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Internal.App
 {
@@ -48,11 +51,30 @@ namespace Internal.App
                     opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
 
+            #region 配置授权认证
+            services
+                .AddAuthorization(option =>
+                {
+                    //option.AddPolicy("InternalApi", new Microsoft.AspNetCore.Authorization.AuthorizationPolicy())
+                })
+                .AddAuthentication(option =>
+                {
+                    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(option =>
+                {
+
+                });
+            #endregion
+
             #region AutoMapper 先注册autoMapper 在使用autofac框架托管
             services.AddAutoMapper(Assembly.Load("Internal.Data"));
             #endregion
 
             #region Swagger
+
+            var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath; 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -63,6 +85,10 @@ namespace Internal.App
                     TermsOfService = "None",
                     Contact = new Contact { Name = "Internal.System", Email = "", Url = "" }
                 });
+
+                var xmlPath = Path.Combine(basePath, "Internal.App.xml");//这个就是刚刚配置的xml文件名
+                c.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
+                c.IncludeXmlComments(Path.Combine(basePath, "Internal.Data.xml"));
             });  
             #endregion
             #region CORS

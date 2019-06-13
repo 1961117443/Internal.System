@@ -13,18 +13,17 @@ namespace Internal.App.Controllers
         #region 返回自动定义的数据格式
         protected IActionResult ApiResult(string msg)
         {
-            ResultMessage result = new ResultMessage()
+            ResultModel result = new ResultModel()
             {
                 Message = msg,
                 Status = 0
             };
             return Json(result);
         }
-        protected IActionResult ApiResult<T>(T data, string msg = "")
+        protected IActionResult ApiResult<T>(T data)
         {
-            ResultMessage<T> result = new ResultMessage<T>()
-            {
-                Message = msg,
+            ResultModel<T> result = new ResultModel<T>()
+            { 
                 Status = 0,
                 Data = data
             };

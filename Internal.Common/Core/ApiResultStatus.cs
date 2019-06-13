@@ -12,6 +12,12 @@ namespace Internal.Common.Core
         /// <summary>
         /// 成功
         /// </summary>
-        public static readonly int OK = 0; 
+        public static readonly int OK = 0;
+
+        /// <summary>
+        /// 返回影响数为0
+        /// </summary>
+        public static readonly int F10010 = 10010;
+
     }
 }

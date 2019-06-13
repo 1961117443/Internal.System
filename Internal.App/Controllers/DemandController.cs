@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Internal.App.Controllers
 {
     /// <summary>
-    /// 需求&BUG控制器
+    /// 需求管理
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -22,6 +22,11 @@ namespace Internal.App.Controllers
         private readonly IDemandService _demandService;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="demandService"></param>
+        /// <param name="mapper"></param>
         public DemandController(IDemandService demandService,IMapper mapper)
         {
             this._demandService = demandService;
@@ -40,15 +45,23 @@ namespace Internal.App.Controllers
             return ApiResult(vd);
         }
         /// <summary>
-        /// 提交需求
+        /// 添加需求
         /// </summary>
-        /// <param name="demand"></param>
+        /// <param name="editModel"></param>
         /// <returns></returns>
         [HttpPost("post")]
-        public async Task<IActionResult> Post([FromBody]DemandViewModel demand)
+        public async Task<IActionResult> Post([FromBody]DemandEditModel editModel)
         { 
 
-            return ApiResult("保存成功");
+            var demand = _mapper.Map<Demand>(editModel);
+            var dt = DateTime.Now;
+            var user = new { Name = "admin" };
+            demand.BillCode = dt.ToString("yyMMddHHmmss");
+            demand.MakeDate = dt;
+            demand.Maker = user.Name;
+
+            int r = await _demandService.Add(demand);
+            return ApiResult(r>0? "提交成功！" : "提交失败！");
         }
 
         /// <summary>
@@ -66,23 +79,39 @@ namespace Internal.App.Controllers
         }
 
         /// <summary>
-        /// 录入需求
+        /// 修改需求
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns> 
+        /// <param name="editModel"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] DemandViewModel demand)
+        public async Task<IActionResult> Put(int id, [FromBody] DemandEditModel editModel)
         {
-            return ApiResult("保存成功");
+            var res = new ResultModel<string>();
+
+            if (editModel.ID.Equals(Guid.Empty))
+            {
+                res.Data = "需求不存在！";
+                return Ok(res);
+            }
+            var demand = await _demandService.QueryByID(editModel.ID);
+            demand.Describe = editModel.Describe;
+            demand.Presenter = editModel.Presenter;
+            demand.RecordDate = editModel.RecordDate;
+
+            bool r = await _demandService.Update(demand, new List<string>() { "Describe", "Presenter", "RecordDate" });
+            if (r)
+            {
+                res.Data = r ? "保存成功！" : "失败成功！";
+            }
+            return Ok(res);
         }
 
         /// <summary>
         /// 需求审核
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="value"></param>
-        /// <returns></returns> 
+        /// <returns></returns>
         [HttpPost("audit")]
         public async Task<IActionResult> Audit(string id)
         {
@@ -93,7 +122,7 @@ namespace Internal.App.Controllers
         /// 需求反审
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns> 
+        /// <returns></returns>
         [HttpPost("unaudit")]
         public async Task<IActionResult> UnAudit(string id)
         {
@@ -108,7 +137,9 @@ namespace Internal.App.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            return ApiResult("删除成功！");
+            var res = new ResultModel<string>();
+            res.Data = await _demandService.DeleteById(id) ? "删除成功！":"";
+            return Ok(res);
         }
     }
 }

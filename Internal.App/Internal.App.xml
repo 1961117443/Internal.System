@@ -4,7 +4,18 @@
         <name>Internal.App</name>
     </assembly>
     <members>
-        <!-- 对于成员“T:Internal.App.Controllers.DemandController”忽略有格式错误的 XML 注释 -->
+        <member name="T:Internal.App.Controllers.DemandController">
+            <summary>
+            需求管理
+            </summary>
+        </member>
+        <member name="M:Internal.App.Controllers.DemandController.#ctor(Internal.IService.IDemandService,AutoMapper.IMapper)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="demandService"></param>
+            <param name="mapper"></param>
+        </member>
         <member name="M:Internal.App.Controllers.DemandController.Get(System.String)">
             <summary>
             获取 需求或者bug
@@ -12,11 +23,11 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandViewModel)">
+        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandEditModel)">
             <summary>
-            提交需求
+            添加需求
             </summary>
-            <param name="demand"></param>
+            <param name="editModel"></param>
             <returns></returns>
         </member>
         <member name="M:Internal.App.Controllers.DemandController.GetPageList(System.Int32,System.Int32)">
@@ -27,28 +38,27 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.Put(System.Int32,Internal.Data.ViewModel.DemandViewModel)">
+        <member name="M:Internal.App.Controllers.DemandController.Put(System.Int32,Internal.Data.ViewModel.DemandEditModel)">
             <summary>
-            录入需求
+            修改需求
             </summary>
             <param name="id"></param>
-            <param name="value"></param>
-            <returns></returns> 
+            <param name="editModel"></param>
+            <returns></returns>
         </member>
         <member name="M:Internal.App.Controllers.DemandController.Audit(System.String)">
             <summary>
             需求审核
             </summary>
             <param name="id"></param>
-            <param name="value"></param>
-            <returns></returns> 
+            <returns></returns>
         </member>
         <member name="M:Internal.App.Controllers.DemandController.UnAudit(System.String)">
             <summary>
             需求反审
             </summary>
             <param name="id"></param>
-            <returns></returns> 
+            <returns></returns>
         </member>
         <member name="M:Internal.App.Controllers.DemandController.Delete(System.String)">
             <summary>
