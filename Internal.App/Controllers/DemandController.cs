@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Internal.App.Authority;
 using Internal.Common.Core;
 using Internal.Data.Entity;
 using Internal.Data.ViewModel;
 using Internal.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +17,12 @@ namespace Internal.App.Controllers
     /// <summary>
     /// 需求管理
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/demand")]
     [ApiController]
     public class DemandController : BaseController
     {
         private readonly IDemandService _demandService;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper; 
 
         /// <summary>
         /// 构造函数
@@ -30,15 +32,16 @@ namespace Internal.App.Controllers
         public DemandController(IDemandService demandService,IMapper mapper)
         {
             this._demandService = demandService;
-            this._mapper = mapper;
+            this._mapper = mapper; 
         }
 
         /// <summary>
         /// 获取 需求或者bug
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> Get(string id)
         {
             var vd = await _demandService.QueryByID(id); 

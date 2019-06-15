@@ -4,6 +4,45 @@
         <name>Internal.App</name>
     </assembly>
     <members>
+        <member name="F:Internal.App.Authority.JwtToken.options">
+            <summary>
+            token设置值
+            </summary>
+        </member>
+        <member name="M:Internal.App.Authority.JwtToken.IssueJwt(Internal.Common.Core.TokenModelJwt)">
+            <summary>
+            颁发JWT字符串
+            </summary>
+            <param name="tokenModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Internal.App.Authority.JwtToken.SerializeJwt(System.String)">
+            <summary>
+            解析
+            </summary>
+            <param name="jwtStr"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Internal.App.Controllers.AccountController">
+            <summary>
+            账号管理
+            </summary>
+        </member>
+        <member name="M:Internal.App.Controllers.AccountController.Login(System.String,System.String)">
+            <summary>
+            登陆操作
+            登陆成功后颁发access_token
+            </summary>
+            <param name="userCode">用户名</param>
+            <param name="passWord">密码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Internal.App.Controllers.AccountController.RefreshAccessToken(System.String)">
+            <summary>
+            刷新Access_Token
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Internal.App.Controllers.DemandController">
             <summary>
             需求管理
@@ -21,7 +60,7 @@
             获取 需求或者bug
             </summary>
             <param name="id"></param>
-            <returns></returns>
+            <returns></returns> 
         </member>
         <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandEditModel)">
             <summary>

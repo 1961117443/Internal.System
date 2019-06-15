@@ -23,6 +23,11 @@ using Internal.Data.Entity;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Internal.App.Filters;
+using Internal.App.Authority;
+using Internal.App.Options;
 
 namespace Internal.App
 {
@@ -43,20 +48,17 @@ namespace Internal.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(opt=>
-                {
-                    //使用默认方式，不更改元数据的key的大小写
-                    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                });
+            #region 注入自己的服务 
+            services.Configure<TokenOptions>(Configuration.GetSection("AccessTokenOptions"));
+            services.AddSingleton(typeof(JwtToken));
+            #endregion
 
             #region 配置授权认证
-            services
-                .AddAuthorization(option =>
-                {
-                    //option.AddPolicy("InternalApi", new Microsoft.AspNetCore.Authorization.AuthorizationPolicy())
-                })
+            services//.AddAuthorization()
+                    //.AddAuthorization(option =>
+                    //{
+                    //    //option.AddPolicy("InternalApi", new Microsoft.AspNetCore.Authorization.AuthorizationPolicy())
+                    //})
                 .AddAuthentication(option =>
                 {
                     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -64,9 +66,43 @@ namespace Internal.App
                 })
                 .AddJwtBearer(option =>
                 {
+                    /***********************************TokenValidationParameters的参数默认值***********************************/
+                    // RequireSignedTokens = true,
+                    // SaveSigninToken = false,
+                    // ValidateActor = false,
+                    // 将下面两个参数设置为false，可以不验证Issuer和Audience，但是不建议这样做。
+                    // ValidateAudience = true,
+                    // ValidateIssuer = true, 
+                    // ValidateIssuerSigningKey = false,
+                    // 是否要求Token的Claims中必须包含Expires
+                    // RequireExpirationTime = true,
+                    // 允许的服务器时间偏移量
+                    // ClockSkew = TimeSpan.FromSeconds(300),
+                    // 是否验证Token有效期，使用当前时间与Token的Claims中的NotBefore和Expires对比
+                    // ValidateLifetime = true
+                    option.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidAudience = Configuration.GetSection("AccessTokenOptions:Issuer").Value,
+                        ValidIssuer = Configuration.GetSection("AccessTokenOptions:Audience").Value,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AccessTokenOptions:Secret").Value)),
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromSeconds(30),
+                    };
 
                 });
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
             #endregion
+
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(opt =>
+                {
+                    //使用默认方式，不更改元数据的key的大小写
+                    opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                });
 
             #region AutoMapper 先注册autoMapper 在使用autofac框架托管
             services.AddAutoMapper(Assembly.Load("Internal.Data"));
@@ -74,7 +110,7 @@ namespace Internal.App
 
             #region Swagger
 
-            var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath; 
+            var basePath = Microsoft.DotNet.PlatformAbstractions.ApplicationEnvironment.ApplicationBasePath;
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -89,7 +125,23 @@ namespace Internal.App
                 var xmlPath = Path.Combine(basePath, "Internal.App.xml");//这个就是刚刚配置的xml文件名
                 c.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
                 c.IncludeXmlComments(Path.Combine(basePath, "Internal.Data.xml"));
-            });  
+
+                #region Token绑定到ConfigureServices
+                //添加header验证信息
+                //c.OperationFilter<SwaggerHeader>();
+                var security = new Dictionary<string, IEnumerable<string>> { { "Internal.App", new string[] { } }, };
+                c.AddSecurityRequirement(security);
+                //方案名称“Blog.Core”可自定义，上下一致即可
+                c.AddSecurityDefinition("Internal.App", new ApiKeyScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = "header",//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = "apiKey"
+                });
+                #endregion
+
+            });
             #endregion
             #region CORS
             //跨域第二种方法，声明策略，记得下边app中配置
@@ -158,7 +210,11 @@ namespace Internal.App
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiHelp V1");
             });
             #endregion
-              
+
+
+            #region 启用授权认证
+            app.UseAuthentication();
+            #endregion
 
             app.UseMvc();
         }
