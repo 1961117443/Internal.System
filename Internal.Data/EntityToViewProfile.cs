@@ -23,6 +23,10 @@ namespace Internal.Data
             CreateMap<Demand, DemandEditModel>()
                 .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name));
             #endregion
+
+            #region Comment 评论管理
+            CreateMap<Comment, CommentViewModel>(); 
+            #endregion
         }
     }
 }

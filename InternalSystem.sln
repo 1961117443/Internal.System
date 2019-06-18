@@ -13,17 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.Service", "Interna
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.App", "Internal.App\Internal.App.csproj", "{58BCE7C7-CC11-4185-9003-5C46725FE350}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.服务层", "03.服务层", "{A067FD9E-ADDF-40EA-BD09-8D110F52AAB6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.服务层", "02.服务层", "{A067FD9E-ADDF-40EA-BD09-8D110F52AAB6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.数据模型", "02.数据模型", "{C1CFF8BB-08F5-4905-989B-C45C2E559124}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.数据模型", "04.数据模型", "{C1CFF8BB-08F5-4905-989B-C45C2E559124}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.应用层", "01.应用层", "{E6B10396-7869-4ECF-9D95-049CCB266A7C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.仓储层", "04.仓储层", "{2E0737C9-FE34-4BCB-AD7D-5183CFD8BC23}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.仓储层", "03.仓储层", "{2E0737C9-FE34-4BCB-AD7D-5183CFD8BC23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.IRepository", "Internal.IRepository\Internal.IRepository.csproj", "{35612AEB-F45F-4C60-87D9-54F7AABF93E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.IRepository", "Internal.IRepository\Internal.IRepository.csproj", "{35612AEB-F45F-4C60-87D9-54F7AABF93E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Internal.Repository.SqlServer", "Internal.Repository.SqlServer\Internal.Repository.SqlServer.csproj", "{1079BF95-FEB0-4B21-A354-D85F442E5817}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Internal.Repository.SqlServer", "Internal.Repository.SqlServer\Internal.Repository.SqlServer.csproj", "{1079BF95-FEB0-4B21-A354-D85F442E5817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

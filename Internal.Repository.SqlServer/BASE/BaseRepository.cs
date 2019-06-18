@@ -116,9 +116,10 @@ namespace Internal.Repository.SqlServer
                 .WhereIF(whereExpression != null, whereExpression)
                 .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
                 .ToListAsync();
-        } 
+        }
         #endregion
 
+        #region 分页查询
         public async Task<List<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, string strOrderByFileds = null)
         {
             return await GetSelect()
@@ -126,6 +127,15 @@ namespace Internal.Repository.SqlServer
              .WhereIF(whereExpression != null, whereExpression)
              .ToPageListAsync(intPageIndex, intPageSize);
         }
+        public async Task<List<TEntity>> QueryPageEx(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, Expression<Func<TEntity, object>> orderByFiledExpression = null, bool asc = true)
+        {
+            return await GetSelect()
+                .OrderByIF(orderByFiledExpression != null, orderByFiledExpression, asc ? OrderByType.Asc : OrderByType.Desc)
+                .WhereIF(whereExpression != null, whereExpression)
+                .ToPageListAsync(intPageIndex, intPageSize);
+        } 
+        #endregion
+
 
         #region 更新
         public async Task<bool> Update(TEntity model)

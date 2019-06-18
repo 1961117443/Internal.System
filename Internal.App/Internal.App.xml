@@ -43,6 +43,26 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Internal.App.Controllers.CommentController">
+            <summary>
+            评论管理
+            </summary>
+        </member>
+        <member name="M:Internal.App.Controllers.CommentController.Get(System.String,System.Int32)">
+            <summary>
+            获取评论列表
+            </summary>
+            <param name="id">所属内容</param>
+            <param name="pageIndex">页码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Internal.App.Controllers.CommentController.Post(Internal.Data.ViewModel.CommentViewModel)">
+            <summary>
+            发表评论
+            </summary>
+            <param name="viewModel">评论内容</param>
+            <returns></returns>
+        </member>
         <member name="T:Internal.App.Controllers.DemandController">
             <summary>
             需求管理

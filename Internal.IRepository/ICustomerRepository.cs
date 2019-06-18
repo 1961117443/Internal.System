@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Internal.IRepository
 {
-    public interface ICustomerRepository:IBaseRepository<Customer>
-    {
-    }
+    //public interface ICustomerRepository:IBaseRepository<Customer>
+    //{
+    //}
 }

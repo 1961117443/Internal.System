@@ -32,12 +32,7 @@ using Internal.App.Options;
 namespace Internal.App
 {
     public class Startup
-    {
-        public void test()
-        {
-            Expression<Func<Demand, Customer>> mapperObject = e => e.Customer;
-            Expression<Func<Demand, object>> mapperField = e => e.CustomerID;
-        }
+    { 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -123,8 +118,14 @@ namespace Internal.App
                 });
 
                 var xmlPath = Path.Combine(basePath, "Internal.App.xml");//这个就是刚刚配置的xml文件名
-                c.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
-                c.IncludeXmlComments(Path.Combine(basePath, "Internal.Data.xml"));
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath, true);//默认的第二个参数是false，这个是controller的注释，记得修改
+                }
+                if (File.Exists(xmlPath))
+                { 
+                    c.IncludeXmlComments(Path.Combine(basePath, "Internal.Data.xml"));
+                }
 
                 #region Token绑定到ConfigureServices
                 //添加header验证信息
@@ -143,7 +144,7 @@ namespace Internal.App
 
             });
             #endregion
-            #region CORS
+            #region CORS 跨域
             //跨域第二种方法，声明策略，记得下边app中配置
             services.AddCors(c =>
             {
@@ -203,6 +204,7 @@ namespace Internal.App
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors("LimitRequests");
+
             #region Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
