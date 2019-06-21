@@ -15,5 +15,14 @@ namespace Internal.Data.ViewModel
         /// 评论内容
         /// </summary>
         public string Content { get; set; }
+
+        /// <summary>
+        /// 评论人
+        /// </summary>
+        public string Commentator { get; set; }
+        /// <summary>
+        /// 评论时间
+        /// </summary>
+        public DateTime CommentTime { get; set; }
     }
 }

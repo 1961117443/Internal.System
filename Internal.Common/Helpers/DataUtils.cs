@@ -6,6 +6,7 @@ namespace Internal.Common.Helpers
 {
     public static class DataUtils
     {
+        #region string
         /// <summary>
         /// 把字符串转换成guid类型
         /// </summary>
@@ -17,7 +18,17 @@ namespace Internal.Common.Helpers
             Guid.TryParse(val, out gid);
             return gid;
         }
+        /// <summary>
+        /// 判断字符串是否为空
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public static bool IsEmpty(this string val)
+        {
+            return string.IsNullOrEmpty(val) || string.IsNullOrWhiteSpace(val);
+        }
 
+        #endregion
         /// <summary>
         /// 判断guid是否为空
         /// </summary>

@@ -19,6 +19,8 @@ namespace Internal.Common.Core
         public int Status { get; set; }
         public T Data { get; set; }
 
+        public string Message { get; set; }
+
         public ResultModel()
         {
             Status = ApiResultStatus.OK;

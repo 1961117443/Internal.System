@@ -37,10 +37,14 @@ namespace Internal.App.Controllers
         /// <returns></returns>
         // GET: api/Comment
         [HttpGet]
-        public async Task<IEnumerable<CommentViewModel>> Get(string id,int pageIndex)
+        public async Task<IActionResult> Get(string id,int pageIndex)
         {
-            var list= await commentService.QueryPageEx(w => w.SubordinateID.Equals(id.toGuid()), pageIndex, 10,e=>e.CommentTime);           
-            return mapper.Map<List<CommentViewModel>>(list);
+            var list= await commentService.QueryPageEx(w => w.SubordinateID.Equals(id.toGuid()), pageIndex, 10,e=>e.CommentTime);
+            ResultModel<List<CommentViewModel>> res = new ResultModel<List<CommentViewModel>>()
+            {
+                Data = mapper.Map<List<CommentViewModel>>(list)
+            };
+            return Ok(res);
         }
 
         // GET: api/Comment/5

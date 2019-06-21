@@ -6,6 +6,7 @@ using Internal.App.Authority;
 using Internal.Common.Core; 
 using Internal.Data.Entity;
 using Internal.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,7 @@ namespace Internal.App.Controllers
         /// <param name="passWord">密码</param>
         /// <returns></returns>
         [HttpGet("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(string userCode,string passWord)
         {
             UserInfo userInfo = new UserInfo();

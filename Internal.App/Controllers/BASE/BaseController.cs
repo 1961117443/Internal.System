@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Internal.Common.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Internal.App.Controllers
 {
+    [Authorize]
     public abstract class BaseController : Controller
     {
         #region 返回自动定义的数据格式

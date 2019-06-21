@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Internal.App.Authority;
 using Internal.Common.Core;
+using Internal.Common.Helpers;
 using Internal.Data.Entity;
 using Internal.Data.ViewModel;
 using Internal.IService;
@@ -41,7 +42,7 @@ namespace Internal.App.Controllers
         /// <param name="id"></param>
         /// <returns></returns> 
         [HttpGet("{id}")]
-        [Authorize]
+      //  [Authorize]
         public async Task<IActionResult> Get(string id)
         {
             var vd = await _demandService.QueryByID(id); 
@@ -118,7 +119,34 @@ namespace Internal.App.Controllers
         [HttpPost("audit")]
         public async Task<IActionResult> Audit(string id)
         {
-            return ApiResult("审核成功");
+            var res = new ResultModel<DemandCardModel>();
+            var demand = await _demandService.QueryByID(id); 
+            if (demand.Audit.IsEmpty())
+            {
+                res.Message = "需求已审核！";
+                res.Data = this._mapper.Map<DemandCardModel>(demand);  
+                return ApiResult(res);
+            }
+            if (!demand.Rejector.IsEmpty())
+            {
+                res.Message = "需求已拒批！";
+                res.Data = this._mapper.Map<DemandCardModel>(demand); 
+                return ApiResult(res);
+            }
+            demand.Audit = "admin";
+            demand.AuditDate = DateTime.Now;
+            var r =await this._demandService.Update(demand);
+            if (await this._demandService.Update(demand))
+            {
+                res.Message = "审核成功！";
+                res.Data = this._mapper.Map<DemandCardModel>(demand); ;
+            }
+            else
+            {
+                res.Message = "审核失败！";
+            }
+
+            return ApiResult(res);
         }
 
         /// <summary>

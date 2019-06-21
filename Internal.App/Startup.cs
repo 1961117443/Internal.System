@@ -158,13 +158,20 @@ namespace Internal.App
                     .AllowCredentials();//允许cookie
                 });
                 //↑↑↑↑↑↑↑注意正式环境不要使用这种全开放的处理↑↑↑↑↑↑↑↑↑↑
-
-
+                List<string> os = new List<string>();
+                var origins = Configuration.GetSection("AllowAnyOrigins");
+                if (origins!=null)
+                {
+                    foreach (var cfg in origins.GetChildren())
+                    {
+                        os.Add($"{cfg.Value}");                        
+                    }
+                } 
                 //一般采用这种方法
                 c.AddPolicy("LimitRequests", policy =>
                 {
                     policy
-                    .WithOrigins("http://127.0.0.1:1818", "http://localhost:8080", "http://localhost:3001", "http://localhost:8021", "http://localhost:8081", "http://localhost:1818")//支持多个域名端口，注意端口号后不要带/斜杆：比如localhost:8000/，是错的
+                    .WithOrigins(os.ToArray())//支持多个域名端口，注意端口号后不要带/斜杆：比如localhost:8000/，是错的
                     .AllowAnyHeader()//Ensures that the policy allows any header.
                     .AllowAnyMethod();
                 });

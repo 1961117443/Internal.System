@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Internal.Data.Entity
 {
-    public class Demand
+    public partial class Demand
     {
         /// <summary>
         /// 主键
@@ -41,8 +41,22 @@ namespace Internal.Data.Entity
         /// </summary>
         public string Describe { get; set; }
 
-        [SqlSugar.SugarColumn(IsIgnore = true)]
-        [ForeignKey("CustomerID")]
-        public virtual Customer Customer { get;set;}
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public string Audit { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        public DateTime AuditDate { get; set; }
+        /// <summary>
+        /// 拒批人
+        /// </summary>
+        public string Rejector { get; set; }
+        /// <summary>
+        /// 拒批时间 
+        /// </summary>
+        public DateTime RejectDate { get; set; } 
+      
     }
 }
