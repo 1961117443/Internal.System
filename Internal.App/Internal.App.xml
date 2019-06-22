@@ -4,6 +4,11 @@
         <name>Internal.App</name>
     </assembly>
     <members>
+        <member name="T:Internal.App.Authority.AspNetUser">
+            <summary>
+            解析token,获取用户信息
+            </summary>
+        </member>
         <member name="F:Internal.App.Authority.JwtToken.options">
             <summary>
             token设置值
@@ -28,7 +33,7 @@
             账号管理
             </summary>
         </member>
-        <member name="M:Internal.App.Controllers.AccountController.Login(System.String,System.String)">
+        <member name="M:Internal.App.Controllers.AccountController.Login(System.String,System.String,Internal.App.Authority.IAspNetUser)">
             <summary>
             登陆操作
             登陆成功后颁发access_token
@@ -37,7 +42,7 @@
             <param name="passWord">密码</param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.AccountController.RefreshAccessToken(System.String)">
+        <member name="M:Internal.App.Controllers.AccountController.RefreshToken(System.String)">
             <summary>
             刷新Access_Token
             </summary>
@@ -56,7 +61,7 @@
             <param name="pageIndex">页码</param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.CommentController.Post(Internal.Data.ViewModel.CommentViewModel)">
+        <member name="M:Internal.App.Controllers.CommentController.Post(Internal.Data.ViewModel.CommentViewModel,Internal.App.Authority.IAspNetUser)">
             <summary>
             发表评论
             </summary>

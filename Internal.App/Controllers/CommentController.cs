@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Internal.App.Authority;
 using Internal.Common.Core;
 using Internal.Common.Helpers;
 using Internal.Data.Entity;
@@ -61,22 +62,24 @@ namespace Internal.App.Controllers
         /// <returns></returns>
         // POST: api/Comment
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]CommentViewModel viewModel)
+        public async Task<IActionResult> Post([FromBody]CommentViewModel viewModel,[FromServices]IAspNetUser user)
         {
-            ResultModel<string> resultModel = new ResultModel<string>();
+
+            ResultModel<CommentViewModel> resultModel = new ResultModel<CommentViewModel>();
 
             if (viewModel.SubordinateID.isEmpty())
             {
-                resultModel.Data = "发表失败！";
+                resultModel.Message = "发表失败！";
                 return Ok(resultModel); 
             }
             var comment = this.mapper.Map<Comment>(viewModel);
-            comment.Commentator = "匿名用户";
+            comment.Commentator = user.Name.IsEmpty()?"匿名用户":user.Name;
             comment.CommentTime = DateTime.Now; 
             var r = await commentService.Add(comment);
             if (r>0)
             {
-                resultModel.Data = "发表成功！";
+                resultModel.Message = "发表成功！";
+                resultModel.Data = this.mapper.Map<CommentViewModel>(comment);
             }
             return Ok(resultModel);
         }

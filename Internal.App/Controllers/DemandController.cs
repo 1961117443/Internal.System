@@ -23,17 +23,20 @@ namespace Internal.App.Controllers
     public class DemandController : BaseController
     {
         private readonly IDemandService _demandService;
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
+        private readonly IAspNetUser aspNetUser;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="demandService"></param>
         /// <param name="mapper"></param>
-        public DemandController(IDemandService demandService,IMapper mapper)
+        /// <param name="aspNetUser">当前登陆用户</param>
+        public DemandController(IDemandService demandService,IMapper mapper,IAspNetUser aspNetUser)
         {
             this._demandService = demandService;
-            this._mapper = mapper; 
+            this._mapper = mapper;
+            this.aspNetUser = aspNetUser;
         }
 
         /// <summary>
@@ -58,11 +61,10 @@ namespace Internal.App.Controllers
         { 
 
             var demand = _mapper.Map<Demand>(editModel);
-            var dt = DateTime.Now;
-            var user = new { Name = "admin" };
+            var dt = DateTime.Now; 
             demand.BillCode = dt.ToString("yyMMddHHmmss");
             demand.MakeDate = dt;
-            demand.Maker = user.Name;
+            demand.Maker = this.aspNetUser.Name;
 
             int r = await _demandService.Add(demand);
             return ApiResult(r>0? "提交成功！" : "提交失败！");
@@ -133,7 +135,7 @@ namespace Internal.App.Controllers
                 res.Data = this._mapper.Map<DemandCardModel>(demand); 
                 return ApiResult(res);
             }
-            demand.Audit = "admin";
+            demand.Audit = this.aspNetUser.Name;
             demand.AuditDate = DateTime.Now;
             var r =await this._demandService.Update(demand);
             if (await this._demandService.Update(demand))

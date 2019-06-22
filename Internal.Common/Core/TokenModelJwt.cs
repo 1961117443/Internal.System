@@ -8,11 +8,15 @@ namespace Internal.Common.Core
     /// 令牌 载体 payload
     /// </summary>
     public class TokenModelJwt
-    {
+    { 
         /// <summary>
         /// Id
         /// </summary>
-        public long Uid { get; set; }
+        public string Uid { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { get; set; }
         /// <summary>
         /// 角色
         /// </summary>

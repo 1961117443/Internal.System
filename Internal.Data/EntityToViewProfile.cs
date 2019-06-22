@@ -25,7 +25,11 @@ namespace Internal.Data
             #endregion
 
             #region Comment 评论管理
-            CreateMap<Comment, CommentViewModel>(); 
+            CreateMap<Comment, CommentViewModel>();
+            #endregion
+
+            #region UserInfo
+            CreateMap<UserInfo, UserViewModel>(); 
             #endregion
         }
     }

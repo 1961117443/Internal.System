@@ -28,6 +28,7 @@ using System.Text;
 using Internal.App.Filters;
 using Internal.App.Authority;
 using Internal.App.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace Internal.App
 {
@@ -46,10 +47,10 @@ namespace Internal.App
             #region 注入自己的服务 
             services.Configure<TokenOptions>(Configuration.GetSection("AccessTokenOptions"));
             services.AddSingleton(typeof(JwtToken));
-            #endregion
-
+           
+            #endregion 
             #region 配置授权认证
-            services//.AddAuthorization()
+            services 
                     //.AddAuthorization(option =>
                     //{
                     //    //option.AddPolicy("InternalApi", new Microsoft.AspNetCore.Authorization.AuthorizationPolicy())
@@ -98,6 +99,10 @@ namespace Internal.App
                     //使用默认方式，不更改元数据的key的大小写
                     opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
+            #region 注入 HttpContext 服务 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
+            services.AddScoped<IAspNetUser, AspNetUser>();
+            #endregion
 
             #region AutoMapper 先注册autoMapper 在使用autofac框架托管
             services.AddAutoMapper(Assembly.Load("Internal.Data"));
