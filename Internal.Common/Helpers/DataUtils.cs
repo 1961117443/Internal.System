@@ -26,7 +26,7 @@ namespace Internal.Common.Helpers
         public static bool IsEmpty(this string val)
         {
             return string.IsNullOrEmpty(val) || string.IsNullOrWhiteSpace(val);
-        }
+        } 
 
         #endregion
         /// <summary>

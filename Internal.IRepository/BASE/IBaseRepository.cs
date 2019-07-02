@@ -53,6 +53,12 @@ namespace Internal.IRepository
         /// <returns></returns> 
         Task<bool> Update(TEntity entity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null, string strWhere = "");
         /// <summary>
+        /// 获取单个实体
+        /// </summary>
+        /// <param name="whereExpression">过滤表达式</param>
+        /// <returns></returns>
+        Task<TEntity> Single(Expression<Func<TEntity, bool>> whereExpression);
+        /// <summary>
         /// 查询实体
         /// </summary>
         /// <param name="whereExpression">过滤表达式</param>

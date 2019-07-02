@@ -157,7 +157,14 @@ namespace Internal.Repository.SqlServer
             }  
             int r = await updater.ExecuteCommandAsync();
             return r > 0;
-        } 
+        }
         #endregion
+
+
+
+        public async Task<TEntity> Single(Expression<Func<TEntity, bool>> whereExpression)
+        {
+            return await GetSelect().SingleAsync(whereExpression);
+        }
     }
 }

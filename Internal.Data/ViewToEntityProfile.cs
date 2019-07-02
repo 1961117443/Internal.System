@@ -13,6 +13,7 @@ namespace Internal.Data
         public ViewToEntityProfile()
         {
             CreateMap<DemandViewModel, Demand>();
+            CreateMap<DemandEditModel, Demand>();
 
             #region Comment 评论管理
             CreateMap<CommentViewModel, Comment>();

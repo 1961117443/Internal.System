@@ -29,6 +29,7 @@ using Internal.App.Filters;
 using Internal.App.Authority;
 using Internal.App.Options;
 using Microsoft.AspNetCore.Http;
+using Internal.Common.Cache;
 
 namespace Internal.App
 {
@@ -45,16 +46,17 @@ namespace Internal.App
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             #region 注入自己的服务 
-            services.Configure<TokenOptions>(Configuration.GetSection("AccessTokenOptions"));
+            services.Configure<TokenOptions>(Configuration.GetSection("AuthTokenOptions"));
             services.AddSingleton(typeof(JwtToken));
-           
-            #endregion 
+            services.AddSingleton<IRedisCacheManager, RedisCacheManager>();
+            #endregion
             #region 配置授权认证
-            services 
-                    //.AddAuthorization(option =>
-                    //{
-                    //    //option.AddPolicy("InternalApi", new Microsoft.AspNetCore.Authorization.AuthorizationPolicy())
-                    //})
+            services
+                .AddAuthorization(
+                    opt =>
+                    { 
+                        opt.AddPolicy("CustomPermission", ap => ap.AddRequirements(new PermissionRequirement()));
+                    })
                 .AddAuthentication(option =>
                 {
                     option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,9 +83,9 @@ namespace Internal.App
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
-                        ValidAudience = Configuration.GetSection("AccessTokenOptions:Issuer").Value,
-                        ValidIssuer = Configuration.GetSection("AccessTokenOptions:Audience").Value,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AccessTokenOptions:Secret").Value)),
+                        ValidAudience = Configuration.GetSection("AuthTokenOptions:Issuer").Value,
+                        ValidIssuer = Configuration.GetSection("AuthTokenOptions:Audience").Value,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AuthTokenOptions:Secret").Value)),
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.FromSeconds(30),
                     };

@@ -19,7 +19,7 @@ namespace Internal.App.Controllers
     /// </summary>
     [Route("api/comment")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class CommentController : BaseController
     {
         private readonly ICommentService commentService;
         private readonly IMapper mapper;
@@ -73,7 +73,7 @@ namespace Internal.App.Controllers
                 return Ok(resultModel); 
             }
             var comment = this.mapper.Map<Comment>(viewModel);
-            comment.Commentator = user.Name.IsEmpty()?"匿名用户":user.Name;
+            comment.Commentator = user.Name;
             comment.CommentTime = DateTime.Now; 
             var r = await commentService.Add(comment);
             if (r>0)

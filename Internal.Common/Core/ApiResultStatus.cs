@@ -20,4 +20,19 @@ namespace Internal.Common.Core
         public static readonly int F10010 = 10010;
 
     }
+
+    public enum ResultStatus
+    {
+        OK
+
+    }
+
+    public enum TipMessageEnum
+    {
+        发布成功,
+        发布失败, 
+        a0,
+        hahaha,
+        哎呀
+    }
 }

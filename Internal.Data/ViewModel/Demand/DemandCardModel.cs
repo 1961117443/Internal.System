@@ -29,5 +29,23 @@ namespace Internal.Data.ViewModel
         /// 需求描述
         /// </summary>
         public string Describe { get; set; }
+
+
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public string Audit { get; set; }
+        /// <summary>
+        /// 审核时间
+        /// </summary>
+        public DateTime AuditDate { get; set; }
+        /// <summary>
+        /// 拒批人
+        /// </summary>
+        public string Rejector { get; set; }
+        /// <summary>
+        /// 拒批时间 
+        /// </summary>
+        public DateTime RejectDate { get; set; }
     }
 }

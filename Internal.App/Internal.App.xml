@@ -9,6 +9,59 @@
             解析token,获取用户信息
             </summary>
         </member>
+        <member name="M:Internal.App.Authority.AspNetUser.#ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor,Internal.App.Authority.JwtToken)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="httpContextAccessor"></param>
+            <param name="jwtToken"></param>
+        </member>
+        <member name="P:Internal.App.Authority.AspNetUser.Id">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.AspNetUser.Name">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.AspNetUser.IsLogin">
+            <summary>
+            判断是否登陆了
+            就是验证authToken 合法，有没有过期
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.AspNetUser.AuthToken">
+            <summary>
+            用户凭据
+            </summary>
+        </member>
+        <member name="T:Internal.App.Authority.IAspNetUser">
+            <summary>
+            当前用户信息
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.IAspNetUser.Id">
+            <summary>
+            用户id
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.IAspNetUser.Name">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.IAspNetUser.IsLogin">
+            <summary>
+            是否登陆
+            </summary>
+        </member>
+        <member name="P:Internal.App.Authority.IAspNetUser.AuthToken">
+            <summary>
+            用户凭据
+            </summary>
+        </member>
         <member name="F:Internal.App.Authority.JwtToken.options">
             <summary>
             token设置值
@@ -33,7 +86,7 @@
             账号管理
             </summary>
         </member>
-        <member name="M:Internal.App.Controllers.AccountController.Login(System.String,System.String,Internal.App.Authority.IAspNetUser)">
+        <member name="M:Internal.App.Controllers.AccountController.Login(System.String,System.String)">
             <summary>
             登陆操作
             登陆成功后颁发access_token
@@ -73,12 +126,13 @@
             需求管理
             </summary>
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.#ctor(Internal.IService.IDemandService,AutoMapper.IMapper)">
+        <member name="M:Internal.App.Controllers.DemandController.#ctor(Internal.IService.IDemandService,AutoMapper.IMapper,Internal.App.Authority.IAspNetUser)">
             <summary>
             构造函数
             </summary>
             <param name="demandService"></param>
             <param name="mapper"></param>
+            <param name="aspNetUser">当前登陆用户</param>
         </member>
         <member name="M:Internal.App.Controllers.DemandController.Get(System.String)">
             <summary>
@@ -87,7 +141,7 @@
             <param name="id"></param>
             <returns></returns> 
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandEditModel)">
+        <member name="M:Internal.App.Controllers.DemandController.Post(Internal.Data.ViewModel.DemandViewModel)">
             <summary>
             添加需求
             </summary>
@@ -102,7 +156,7 @@
             <param name="pageSize"></param>
             <returns></returns>
         </member>
-        <member name="M:Internal.App.Controllers.DemandController.Put(System.Int32,Internal.Data.ViewModel.DemandEditModel)">
+        <member name="M:Internal.App.Controllers.DemandController.Put(System.String,Internal.Data.ViewModel.DemandEditModel)">
             <summary>
             修改需求
             </summary>
@@ -129,6 +183,27 @@
             删除需求
             </summary>
             <param name="id"></param>
+        </member>
+        <member name="P:Internal.App.Filters.PermissionRequirement.Count">
+            <summary>
+            访问次数
+            </summary>
+        </member>
+        <member name="P:Internal.App.Filters.PermissionRequirement.Permissions">
+            <summary>
+            拥有的权限
+            </summary>
+        </member>
+        <member name="P:Internal.App.Filters.PermissionRequirement.InitAuth">
+            <summary>
+            是否已经初始化权限
+            没有初始化的话,获取所有的权限
+            </summary>
+        </member>
+        <member name="T:Internal.App.Filters.PermissionAuthorizationHandler">
+            <summary>
+            授权认证过滤器
+            </summary>
         </member>
     </members>
 </doc>

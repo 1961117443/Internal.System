@@ -12,4 +12,15 @@ namespace Internal.Repository.SqlServer
     public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
     }
+
+
+    public class SysPermissionRepository : BaseRepository<SysPermission>, ISysPermissionRepository
+    {
+    }
+    public class SysUserRoleRepository : BaseRepository<SysUserRole>, ISysUserRoleRepository
+    {
+    }
+    public class SysRolePermissionRepository : BaseRepository<SysRolePermission>, ISysRolePermissionRepository
+    {
+    }
 }

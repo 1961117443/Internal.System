@@ -48,7 +48,7 @@ namespace Internal.App.Authority
                 new Claim(JwtRegisteredClaimNames.Iat, $"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}"),
                 new Claim(JwtRegisteredClaimNames.Nbf,$"{new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds()}") ,
                 //这个就是过期时间，目前是过期100秒，可自定义，注意JWT有自己的缓冲过期时间
-                new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddSeconds(100)).ToUnixTimeSeconds()}"),
+                new Claim (JwtRegisteredClaimNames.Exp,$"{new DateTimeOffset(DateTime.Now.AddSeconds(3600)).ToUnixTimeSeconds()}"),
                 new Claim(JwtRegisteredClaimNames.Iss,iss),
                 new Claim(JwtRegisteredClaimNames.Aud,aud), 
                 
@@ -95,7 +95,7 @@ namespace Internal.App.Authority
         public TokenModelJwt SerializeJwt(string jwtStr)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(jwtStr);
+            JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(jwtStr); 
             object role,name;
             try
             {
@@ -110,8 +110,7 @@ namespace Internal.App.Authority
             var tm = new TokenModelJwt
             {
                 Uid= jwtToken.Id,
-                Name = name!=null ? name.ToString():"",
-                //Uid = (long)Convert.ChangeType(jwtToken.Id, typeof(long)),
+                Name = name!=null ? name.ToString():"", 
                 Role = role != null ? role.ToString() : "",
             };
             return tm;

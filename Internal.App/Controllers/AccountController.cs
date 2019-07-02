@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Internal.App.Authority;
+using Internal.Common.Cache;
 using Internal.Common.Core;
 using Internal.Common.Helpers;
 using Internal.Data.Entity;
@@ -41,43 +42,54 @@ namespace Internal.App.Controllers
         /// <returns></returns>
         [HttpGet("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(string userCode,string passWord,[FromServices]IAspNetUser aspNetUser)
+        public async Task<IActionResult> Login(string userCode,string passWord)
         {
             ResultModel<string> resultModel = new ResultModel<string>();
-            if (aspNetUser!=null && aspNetUser.IsLogin)
+            var res = await this._userService.UserLogin(userCode, passWord);
+            if (res.Success)
             {
-                resultModel.Data = aspNetUser.AccessToken;
-                return Ok(resultModel);
-            }
-            var users = await this._userService.Query(w => w.UserCode == userCode);
-            if (!users.Any())
-            {
-                resultModel.Message = "账号不存在";
-                resultModel.Status = 20001;
+                TokenModelJwt tokenModel = new TokenModelJwt()
+                {
+                    Uid = res.Data.ID.ToString(),
+                    Name = res.Data.UserName,
+                };
+                var token = _jwtToken.IssueJwt(tokenModel);
+                var u = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+                resultModel.Data = token;
             }
             else
-            { 
-                var user = users.FirstOrDefault(w => w.UserCode == userCode && w.PassWord == MD5($"{passWord}{w.ID}"));
-                if (user==null)
-                {
-                    resultModel.Message = "密码错误"; ;
-                    resultModel.Status = 20002;
-                }
-                else
-                {
+            {
+                resultModel.Message = res.Message;
+                resultModel.Status = res.Code;
+            }
+            //var users = await this._userService.Query(w => w.UserCode == userCode);
+            //if (!users.Any())
+            //{
+            //    resultModel.Message = "账号不存在";
+            //    resultModel.Status = 20001;
+            //}
+            //else
+            //{ 
+            //    var user = users.FirstOrDefault(w => w.UserCode == userCode && w.PassWord == MD5($"{passWord}{w.ID}"));
+            //    if (user==null)
+            //    {
+            //        resultModel.Message = "密码错误"; ;
+            //        resultModel.Status = 20002;
+            //    }
+            //    else
+            //    {
 
-                    TokenModelJwt tokenModel = new TokenModelJwt()
-                    {
-                        Uid = user.ID.ToString(),
-                        Name = user.UserName,
-                        //Work = "超级管理员"
-                    };
-                    var token = _jwtToken.IssueJwt(tokenModel);
-                    var u = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
-                    resultModel.Data = token;
-                } 
-            } 
-            
+            //        TokenModelJwt tokenModel = new TokenModelJwt()
+            //        {
+            //            Uid = user.ID.ToString(),
+            //            Name = user.UserName, 
+            //        };
+            //        var token = _jwtToken.IssueJwt(tokenModel);
+            //        var u = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+            //        resultModel.Data = token;
+            //    } 
+            //} 
+
             return Ok(resultModel);
         }
 

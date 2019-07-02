@@ -57,7 +57,7 @@ namespace Internal.App.Controllers
         /// <param name="editModel"></param>
         /// <returns></returns>
         [HttpPost("post")]
-        public async Task<IActionResult> Post([FromBody]DemandEditModel editModel)
+        public async Task<IActionResult> Post([FromBody]DemandViewModel editModel)
         { 
 
             var demand = _mapper.Map<Demand>(editModel);
@@ -77,6 +77,7 @@ namespace Internal.App.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
+        [Authorize("CustomPermission")]
         public async Task<IActionResult> GetPageList(int pageIndex,int pageSize)
         {
             var list = await _demandService.QueryPage(null,pageIndex,pageSize);
@@ -91,7 +92,7 @@ namespace Internal.App.Controllers
         /// <param name="editModel"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] DemandEditModel editModel)
+        public async Task<IActionResult> Put(string id, [FromBody] DemandEditModel editModel)
         {
             var res = new ResultModel<string>();
 
@@ -123,17 +124,17 @@ namespace Internal.App.Controllers
         {
             var res = new ResultModel<DemandCardModel>();
             var demand = await _demandService.QueryByID(id); 
-            if (demand.Audit.IsEmpty())
+            if (!demand.Audit.IsEmpty())
             {
                 res.Message = "需求已审核！";
                 res.Data = this._mapper.Map<DemandCardModel>(demand);  
-                return ApiResult(res);
+                return Ok(res);
             }
             if (!demand.Rejector.IsEmpty())
             {
                 res.Message = "需求已拒批！";
                 res.Data = this._mapper.Map<DemandCardModel>(demand); 
-                return ApiResult(res);
+                return Ok(res);
             }
             demand.Audit = this.aspNetUser.Name;
             demand.AuditDate = DateTime.Now;
@@ -148,7 +149,7 @@ namespace Internal.App.Controllers
                 res.Message = "审核失败！";
             }
 
-            return ApiResult(res);
+            return Ok(res);
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace Internal.App.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var res = new ResultModel<string>();
-            res.Data = await _demandService.DeleteById(id) ? "删除成功！":"";
+            res.Message = await _demandService.DeleteById(id) ? "删除成功！":"";
             return Ok(res);
         }
     }
