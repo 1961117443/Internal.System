@@ -98,23 +98,7 @@ namespace Internal.App.Filters
                     if (await permissionService.HasAuth(questUrl, method, aspNetUser.Id))
                     {
                         context.Succeed(requirement);
-                    }
-                    //if (requirement.Permissions.GroupBy(g => g.Url).Where(w => w.Key?.ToLower() == questUrl).Count() > 0)
-                    //{
-                    //    // 获取当前用户的角色信息
-                    //    var currentUserRoles = (from item in httpContext.User.Claims
-                    //                            where item.Type == requirement.ClaimType
-                    //                            select item.Value).ToList();
-
-
-                    //    //验证权限
-                    //    if (currentUserRoles.Count <= 0 || requirement.Permissions.Where(w => currentUserRoles.Contains(w.Role) && w.Url.ToLower() == questUrl).Count() <= 0)
-                    //    {
-
-                    //        context.Fail();
-                    //        return;
-                    //    }
-                    //}
+                    } 
                     else
                     {
                         context.Fail();

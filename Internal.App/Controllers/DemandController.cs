@@ -44,8 +44,7 @@ namespace Internal.App.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns> 
-        [HttpGet("{id}")]
-      //  [Authorize]
+        [HttpGet("{id}")] 
         public async Task<IActionResult> Get(string id)
         {
             var vd = await _demandService.QueryByID(id); 
@@ -77,7 +76,7 @@ namespace Internal.App.Controllers
         /// <param name="pageSize"></param>
         /// <returns></returns>
         [HttpGet("list")]
-        [Authorize("CustomPermission")]
+       // [Authorize("CustomPermission")] 在基类处理
         public async Task<IActionResult> GetPageList(int pageIndex,int pageSize)
         {
             var list = await _demandService.QueryPage(null,pageIndex,pageSize);

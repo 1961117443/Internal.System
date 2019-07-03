@@ -30,6 +30,7 @@ using Internal.App.Authority;
 using Internal.App.Options;
 using Microsoft.AspNetCore.Http;
 using Internal.Common.Cache;
+using Internal.Common.Options;
 
 namespace Internal.App
 {
@@ -46,7 +47,7 @@ namespace Internal.App
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             #region 注入自己的服务 
-            services.Configure<TokenOptions>(Configuration.GetSection("AuthTokenOptions"));
+            services.Configure<TokenOptions>(Configuration.GetSection("AuthTokenOptions")); 
             services.AddSingleton(typeof(JwtToken));
             services.AddSingleton<IRedisCacheManager, RedisCacheManager>();
             #endregion

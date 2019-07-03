@@ -101,6 +101,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Internal.App.Controllers.BaseController">
+            <summary>
+            需要权限认证的基类
+            </summary>
+        </member>
         <member name="T:Internal.App.Controllers.CommentController">
             <summary>
             评论管理

@@ -1,5 +1,7 @@
 ﻿using Internal.Common.Helpers;
+using Internal.Common.Options;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,10 @@ namespace Internal.Common.Cache
         public volatile ConnectionMultiplexer redisConnection;
 
         private readonly object redisConnectionLock = new object();
-        private readonly IConfiguration configuration;
 
         public RedisCacheManager(IConfiguration configuration)
-        {
-            string redisConfiguration = configuration.GetConnectionString("RedisCaching") ?? "127.0.0.1:6379";
+        { 
+            string redisConfiguration = configuration.GetConnectionString("Redis");
             // string redisConfiguration = Appsettings.app(new string[] { "AppSettings", "RedisCaching", "ConnectionString" });//获取连接字符串
             //string redisConfiguration = configuration.GetConnectionString("AppSettings:RedisCaching")?? "127.0.0.1:6379";  
             if (string.IsNullOrWhiteSpace(redisConfiguration))
@@ -28,9 +29,18 @@ namespace Internal.Common.Cache
             }
             this.redisConnenctionString = redisConfiguration;
             this.redisConnection = GetRedisConnection();
-            this.configuration = configuration;
         }
 
+        /// <summary>
+        /// 缓存是否能够使用
+        /// </summary>
+        public bool EnableUse
+        {
+            get
+            {
+                return this.redisConnection != null;
+            }
+        }
         /// <summary>
         /// 核心代码，获取连接实例
         /// 通过双if 夹lock的方式，实现单例模式
@@ -72,7 +82,7 @@ namespace Internal.Common.Cache
                 var server = this.GetRedisConnection().GetServer(endPoint);
                 foreach (var key in server.Keys())
                 {
-                    redisConnection.GetDatabase().KeyDelete(key);
+                    redisConnection?.GetDatabase().KeyDelete(key);
                 }
             }
         }
@@ -83,6 +93,10 @@ namespace Internal.Common.Cache
         /// <returns></returns>
         public bool Exists(string key)
         {
+            if (!EnableUse)
+            {
+                return false;
+            }
             return redisConnection.GetDatabase().KeyExists(key);
         }
 
@@ -93,7 +107,7 @@ namespace Internal.Common.Cache
         /// <returns></returns>
         public string Get(string key)
         {
-            return redisConnection.GetDatabase().StringGet(key);
+            return redisConnection?.GetDatabase().StringGet(key);
         }
 
         /// <summary>
@@ -122,7 +136,7 @@ namespace Internal.Common.Cache
         /// <param name="key"></param>
         public void Remove(string key)
         {
-            redisConnection.GetDatabase().KeyDelete(key);
+            redisConnection?.GetDatabase().KeyDelete(key);
         }
         /// <summary>
         /// 设置
@@ -130,12 +144,26 @@ namespace Internal.Common.Cache
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <param name="cacheTime"></param>
-        public void Set(string key, object value, TimeSpan cacheTime)
+        public void Set(string key, string value, TimeSpan? cacheTime =null)
+        {
+            if (value != null)
+            { 
+                redisConnection?.GetDatabase().StringSet(key, value, cacheTime);
+            }
+        }
+
+        /// <summary>
+        /// 设置
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="cacheTime"></param>
+        public void Set<TEntity>(string key, TEntity value, TimeSpan? cacheTime = null)
         {
             if (value != null)
             {
                 //序列化，将object值生成RedisValue
-                redisConnection.GetDatabase().StringSet(key, SerializeHelper.Serialize(value), cacheTime);
+                redisConnection?.GetDatabase().StringSet(key, SerializeHelper.Serialize(value), cacheTime);
             }
         }
 
@@ -147,7 +175,11 @@ namespace Internal.Common.Cache
         /// <returns></returns>
         public bool SetValue(string key, byte[] value)
         {
-            return redisConnection.GetDatabase().StringSet(key, value, TimeSpan.FromSeconds(120));
+            if (EnableUse)
+            {
+                return redisConnection.GetDatabase().StringSet(key, value, TimeSpan.FromSeconds(120));
+            }
+            return false;
         }
 
     }

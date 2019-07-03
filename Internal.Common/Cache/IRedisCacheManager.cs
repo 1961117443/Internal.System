@@ -9,7 +9,10 @@ namespace Internal.Common.Cache
     /// </summary>
     public interface IRedisCacheManager
     {
-
+        /// <summary>
+        /// 缓存是否能够使用
+        /// </summary>
+        bool EnableUse { get; }
         //获取 Reids 缓存值
         string Get(string key);
 
@@ -17,7 +20,9 @@ namespace Internal.Common.Cache
         TEntity Get<TEntity>(string key);
 
         //保存
-        void Set(string key, object value, TimeSpan cacheTime);
+        void Set(string key, string value, TimeSpan? cacheTime=null);
+        //保存
+        void Set<TEntity>(string key, TEntity value, TimeSpan? cacheTime = null);
 
         //判断是否存在
         bool Exists(string key);

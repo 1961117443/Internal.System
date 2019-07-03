@@ -9,7 +9,10 @@ using Newtonsoft.Json;
 
 namespace Internal.App.Controllers
 {
-    [Authorize]
+    /// <summary>
+    /// 需要权限认证的基类
+    /// </summary>
+    [Authorize("CustomPermission")]
     public abstract class BaseController : Controller
     {
         #region 返回自动定义的数据格式

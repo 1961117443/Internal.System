@@ -16,5 +16,11 @@ namespace Internal.IService
         /// <param name="userId">用户id</param>
         /// <returns></returns>
         Task<bool> HasAuth(string linkUrl,string httpMethod, string userId);
+
+        /// <summary>
+        /// 获取所有的接口权限
+        /// </summary>
+        /// <returns></returns>
+        Task<List<SysPermission>> GetAllPermission();
     }
 }
