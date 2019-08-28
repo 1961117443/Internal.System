@@ -1,4 +1,5 @@
-﻿using Internal.Common.Helpers;
+﻿using Internal.Common.Core;
+using Internal.Common.Helpers;
 using Internal.Common.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -20,13 +21,14 @@ namespace Internal.Common.Cache
 
         public RedisCacheManager(IConfiguration configuration)
         { 
-            string redisConfiguration = configuration.GetConnectionString("Redis");
+            string redisConfiguration = configuration.GetConnectionString("Redis"); 
             // string redisConfiguration = Appsettings.app(new string[] { "AppSettings", "RedisCaching", "ConnectionString" });//获取连接字符串
             //string redisConfiguration = configuration.GetConnectionString("AppSettings:RedisCaching")?? "127.0.0.1:6379";  
             if (string.IsNullOrWhiteSpace(redisConfiguration))
             {
                 throw new ArgumentException("redis config is empty", nameof(redisConfiguration));
             }
+            redisConfiguration= EncryptHelper.AESDecrypt(redisConfiguration, ConstantKey.Redis_Salt_Key);
             this.redisConnenctionString = redisConfiguration;
             this.redisConnection = GetRedisConnection();
         }

@@ -217,8 +217,9 @@ namespace Internal.App
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-            app.UseCors("LimitRequests");
+            } 
+            app.UseCors("AllRequests");
+            //app.UseCors("LimitRequests");
 
             #region Swagger
             app.UseSwagger();
