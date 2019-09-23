@@ -17,7 +17,7 @@ namespace Internal.Repository.SqlServer
         protected override ISugarQueryable<Demand> GetSelect()
         {
             var q = Db.Queryable<Demand>()
-                .Mapper(e => e.Customer, e => e.CustomerID);
+                .Mapper(e => e.Customer, e => e.ClientName);
             return q;
         }
         //protected override ISugarQueryable<Demand> GetQueryable()

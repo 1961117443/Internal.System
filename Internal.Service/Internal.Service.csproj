@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Internal.Common\Internal.Common.csproj" />
     <ProjectReference Include="..\Internal.Data\Internal.Data.csproj" />
     <ProjectReference Include="..\Internal.IRepository\Internal.IRepository.csproj" />

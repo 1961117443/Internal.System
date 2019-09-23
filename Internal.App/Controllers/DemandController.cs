@@ -102,8 +102,8 @@ namespace Internal.App.Controllers
             }
             var demand = await _demandService.QueryByID(editModel.ID);
             demand.Describe = editModel.Describe;
-            demand.Presenter = editModel.Presenter;
-            demand.RecordDate = editModel.RecordDate;
+            demand.Demander = editModel.Presenter;
+            demand.InputDate = editModel.RecordDate;
 
             bool r = await _demandService.Update(demand, new List<string>() { "Describe", "Presenter", "RecordDate" });
             if (r)
@@ -129,7 +129,7 @@ namespace Internal.App.Controllers
                 res.Data = this._mapper.Map<DemandCardModel>(demand);  
                 return Ok(res);
             }
-            if (!demand.Rejector.IsEmpty())
+            if (!demand.NotHandleMan.IsEmpty())
             {
                 res.Message = "需求已拒批！";
                 res.Data = this._mapper.Map<DemandCardModel>(demand); 

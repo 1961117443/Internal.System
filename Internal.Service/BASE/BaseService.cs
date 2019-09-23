@@ -53,6 +53,11 @@ namespace Internal.Service
             return await Repository.QueryPage(whereExpression,intPageIndex, intPageSize, strOrderByFileds);
         }
 
+        public async Task<List<TEntity>> QueryPage(int intPageIndex, int intPageSize, string strOrderByFileds = null)
+        {
+            return await Repository.QueryPage(null, intPageIndex, intPageSize, strOrderByFileds);
+        }
+
         public async virtual Task<List<TEntity>> QueryPageEx(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 0, int intPageSize = 20, Expression<Func<TEntity, object>> orderByFiledExpression = null, bool asc = true)
         {
             return await Repository.QueryPageEx(whereExpression, intPageIndex, intPageSize,orderByFiledExpression,asc);

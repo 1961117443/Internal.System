@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Internal.IRepository
 {
-    public interface IBaseRepository<TEntity> where TEntity:class
+    public partial interface IBaseRepository<TEntity> where TEntity:class
     {
         /// <summary>
         /// 查询单个实体对象

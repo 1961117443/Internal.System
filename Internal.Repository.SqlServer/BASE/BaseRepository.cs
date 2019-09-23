@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Internal.Repository.SqlServer
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class,new()
+    public partial class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class,new()
     {
         #region 引用sqlsugar
         private DbContext context;

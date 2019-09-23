@@ -13,15 +13,19 @@ namespace Internal.Data
         {
             #region Demand 需求录入
             CreateMap<Demand, DemandViewModel>()
-                    .ForMember(t => t.CustomerIDCode, m => m.MapFrom(s => s.Customer.Code))
-                    .ForMember(t => t.CustomerIDName, m => m.MapFrom(s => s.Customer.Name));
+                    .ForMember(t => t.CustomerIDCode, m => m.MapFrom(s =>s.Customer.Code))
+                    .ForMember(t => t.CustomerIDName, m => m.MapFrom(s =>s.Customer.Name));
 
             CreateMap<Demand, DemandCardModel>()
                 .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name))
-                .ForMember(t => t.InputDate, m => m.MapFrom(s => s.RecordDate));
+                .ForMember(t => t.InputDate, m => m.MapFrom(s => s.InputDate));
 
             CreateMap<Demand, DemandEditModel>()
                 .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name));
+
+            CreateMap<Demand, DemandView>()
+                .ForMember(t => t.customerName, m => m.MapFrom(s => s.Customer.Name))
+                .ReverseMap();
             #endregion
 
             #region Comment 评论管理

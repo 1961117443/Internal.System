@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using Internal.Common.Core;
+using Internal.IService;
 
 namespace Internal.App.Controllers
 {
@@ -17,6 +18,10 @@ namespace Internal.App.Controllers
     [ApiController]
     public class ServerController : ControllerBase
     {
+        public ServerController(IDBSchemaService schemaService)
+        {
+            this.schemaService = schemaService;
+        }
         [HttpGet("api/server/encrypt")]
         public string Encrypt(string input, string key)
         {
@@ -37,6 +42,8 @@ namespace Internal.App.Controllers
         }
 
         private MethodInfo[] methods = typeof(Math).GetMethods();
+        private readonly IDBSchemaService schemaService;
+
         [HttpPost("eval")]
         public object Eval(JObject jObject)
         {  
@@ -87,6 +94,19 @@ namespace Internal.App.Controllers
             } 
 
             return Ok(resultModel);
+        }
+
+
+        /// <summary>
+        /// 获取表架构,转成json格式
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        [HttpGet("GetTableSchema")]
+        public async Task<IActionResult> GetTableSchema(string tableName)
+        {
+           var data=await this.schemaService.DbToCSharp(tableName);
+            return Ok(data);
         }
     }
 }

@@ -55,5 +55,58 @@ namespace Internal.Common.Helpers
         {
 
         }
+
+        #region Type
+        /// <summary>
+        /// 获取类型简称
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static string ShortName(this Type type)
+        {
+            var name = type.Name;
+            switch (name)
+            {
+                case "Int32":
+                case "Int64":
+                    name = "int";
+                    break;
+                case "String":
+                    name = "string";
+                    break;
+                case "Boolean":
+                    name = "bool";
+                    break;
+                default: 
+                    break;
+            }
+            return name;
+        }
+        public static bool Nullable(this Type type)
+        {
+            var name = type.ShortName(); 
+            switch (name)
+            {
+                case "string":
+                case "Guid":
+                    return false; 
+                default:
+                    return true;
+            } 
+        } 
+        #endregion
+
+        #region StringBuilder
+        /// <summary>
+        /// 插入的时候加一个tab
+        /// </summary>
+        /// <param name="stringBuilder"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static StringBuilder AppendTabLine(this StringBuilder stringBuilder,string value)
+        {
+            return stringBuilder.AppendLine($"\t{value}");
+        }
+        #endregion
     }
 }

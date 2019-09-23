@@ -65,10 +65,20 @@ namespace Internal.IService
         /// <param name="strOrderByFileds">排序字段</param>
         /// <returns></returns>
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, string strOrderByFileds);
+
         /// <summary>
         /// 获取分页数据，不会返回页数
         /// </summary>
         /// <param name="whereExpression">过滤表达式</param>
+        /// <param name="intPageIndex">页码</param>
+        /// <param name="intPageSize">页大小</param>
+        /// <param name="strOrderByFileds">排序字段</param>
+        /// <returns></returns>
+        Task<List<TEntity>> QueryPage(int intPageIndex, int intPageSize, string strOrderByFileds = null);
+
+        /// <summary>
+        /// 获取分页数据，不会返回页数
+        /// </summary> 
         /// <param name="intPageIndex">页码</param>
         /// <param name="intPageSize">页大小</param>
         /// <param name="strOrderByFileds">排序字段</param>

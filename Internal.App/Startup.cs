@@ -102,6 +102,7 @@ namespace Internal.App
                     //使用默认方式，不更改元数据的key的大小写
                     opt.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
+
             #region 注入 HttpContext 服务 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
             services.AddScoped<IAspNetUser, AspNetUser>();
@@ -118,12 +119,20 @@ namespace Internal.App
             {
                 c.SwaggerDoc("v1", new Info
                 {
-                    Version = "v0.1.0",
+                    Version = "v1.0.0",
                     Title = "内部系统 API",
                     Description = "框架说明文档",
                     TermsOfService = "None",
                     Contact = new Contact { Name = "Internal.System", Email = "", Url = "" }
                 });
+                //c.SwaggerDoc("v2", new Info
+                //{
+                //    Version = "v2.0.0",
+                //    Title = "内部系统 API2",
+                //    Description = "框架说明文档2",
+                //    TermsOfService = "None",
+                //    Contact = new Contact { Name = "Internal.System", Email = "", Url = "" }
+                //});
 
                 var xmlPath = Path.Combine(basePath, "Internal.App.xml");//这个就是刚刚配置的xml文件名
                 if (File.Exists(xmlPath))
@@ -188,6 +197,7 @@ namespace Internal.App
             //跨域 注意下边 Configure方法 中进行配置
             //services.AddCors();
             #endregion 
+
             #region AutoFac
 
             //实例化 AutoFac  容器   
@@ -217,15 +227,22 @@ namespace Internal.App
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            if (env.IsDevelopment())
+            {
+                app.UseCors("AllRequests");
+            }
+            else
+            {
+                app.UseCors("LimitRequests");
             } 
-            app.UseCors("AllRequests");
-            //app.UseCors("LimitRequests");
 
             #region Swagger
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiHelp V1");
+                //c.SwaggerEndpoint("/swagger/v2/swagger.json", "ApiHelp V2");
             });
             #endregion
 
