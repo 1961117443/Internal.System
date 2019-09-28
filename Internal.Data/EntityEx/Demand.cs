@@ -17,8 +17,7 @@ namespace Internal.Data.Entity
         public virtual Customer Customer { get; set; }
 
         [SugarColumn(IsIgnore = true)]
-        [ForeignKey("ClientFileName")]
-        [FreeSql.DataAnnotations.Column(IsIgnore = true)]
-        public ClientFile ClientFile { get; set; }
+        [ForeignKey("ClientFileName")] 
+        public virtual ClientFile ClientFile { get; set; }
     }
 }
