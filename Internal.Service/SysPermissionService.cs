@@ -69,7 +69,7 @@ namespace Internal.Service
             }
             List<string> userRoles = await GetUserRole(userId);
             List<string> rolePermissions = new List<string>();
-            foreach (var item in await sysRolePermissionRepository.Query(w => userRoles.Contains(w.RoleID.ToString())))
+            foreach (var item in await sysRolePermissionRepository.QueryAsync(w => userRoles.Contains(w.RoleID.ToString())))
             {
                 rolePermissions.Add(item.PermissionID.ToString());
             }
@@ -90,7 +90,7 @@ namespace Internal.Service
                 return redisCacheManager.Get(key).Split(",").ToList();
             }
             List<string> userRoles = new List<string>();
-            foreach (var item in await sysUserRoleRepository.Query(w => w.UserID.Equals(userId.toGuid())))
+            foreach (var item in await sysUserRoleRepository.QueryAsync(w => w.UserID.Equals(userId.toGuid())))
             {
                 userRoles.Add(item.RoleID.ToString());
             }
@@ -112,7 +112,7 @@ namespace Internal.Service
             }
             else
             {
-                permissions = await sysPermissionRepository.Query(w => !w.ID.Equals(Guid.Empty)) ?? new List<SysPermission>();
+                permissions = await sysPermissionRepository.QueryAsync(w => !w.ID.Equals(Guid.Empty)) ?? new List<SysPermission>();
                 redisCacheManager.Set(CacheConstantKey.PERMISSION, permissions);
             }
             return permissions;

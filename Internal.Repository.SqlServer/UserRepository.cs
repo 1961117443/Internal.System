@@ -14,12 +14,12 @@ namespace Internal.Repository.SqlServer
         { 
         }
 
-        public Task<List<SysPermission>> GetUserPermission(Guid Id)
+        public Task<List<SysPermission>> GetUserPermissionAsync(Guid Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<SysRole>> GetUserRole(Guid Id)
+        public async Task<List<SysRole>> GetUserRoleAsync(Guid Id)
         {
             // sysRoleRepository.GetSelect().Where(w=> SqlFunc.Subqueryable<>)
             var q= Db.Queryable<SysRole>()

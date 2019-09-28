@@ -31,6 +31,10 @@ using Internal.App.Options;
 using Microsoft.AspNetCore.Http;
 using Internal.Common.Cache;
 using Internal.Common.Options;
+using System.Diagnostics;
+using Admin.Service;
+using Autofac.Extras.DynamicProxy;
+using Internal.IService.AOP;
 
 namespace Internal.App
 {
@@ -50,6 +54,13 @@ namespace Internal.App
             services.Configure<TokenOptions>(Configuration.GetSection("AuthTokenOptions")); 
             services.AddSingleton(typeof(JwtToken));
             services.AddSingleton<IRedisCacheManager, RedisCacheManager>();
+            var freeSql = new FreeSql.FreeSqlBuilder()
+                .UseConnectionString(FreeSql.DataType.SqlServer, "server=.;uid=sa;pwd=123456;database=InternalDB")
+                //.UseAutoSyncStructure(true)
+                //.UseLazyLoading(true) 
+                .UseMonitorCommand(cmd => Trace.WriteLine(cmd.CommandText))
+                .Build();
+            services.AddSingleton(typeof(IFreeSql), freeSql);
             #endregion
             #region 配置授权认证
             services
@@ -110,6 +121,10 @@ namespace Internal.App
 
             #region AutoMapper 先注册autoMapper 在使用autofac框架托管
             services.AddAutoMapper(Assembly.Load("Internal.Data"));
+            AutoMapper.Configuration.MapperConfigurationExpression expression = new AutoMapper.Configuration.MapperConfigurationExpression();
+            expression.AddProfiles(Assembly.Load("Internal.Data"));
+            AutoMapper.Mapper.Initialize(expression); 
+
             #endregion
 
             #region Swagger
@@ -205,13 +220,27 @@ namespace Internal.App
 
             //注册要通过反射创建的组件
             //builder.RegisterType<DemandService>().As<IDemandService>();
+            
             var assemblysServices = Assembly.Load("Internal.Service");//要记得!!!这个注入的是实现类层，不是接口层！不是 IServices
-            builder.RegisterAssemblyTypes(assemblysServices).AsImplementedInterfaces();//指定已扫描程序集中的类型注册为提供所有其实现的接口。
+            builder.RegisterAssemblyTypes(assemblysServices).AsImplementedInterfaces()
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(ServiceInterceptorAOP));//指定已扫描程序集中的类型注册为提供所有其实现的接口。
             var assemblysRepository = Assembly.Load("Internal.Repository.SqlServer");//模式是 Load(解决方案名)
             builder.RegisterAssemblyTypes(assemblysRepository).AsImplementedInterfaces();
+            assemblysRepository = Assembly.Load("Internal.Repository.FreeSqlServer");//模式是 Load(解决方案名)
+            builder.RegisterAssemblyTypes(assemblysRepository).AsImplementedInterfaces();
+            assemblysRepository = Assembly.Load("Admin.Service");//模式是 Load(解决方案名) FreeSql Service
+            builder.RegisterAssemblyTypes(assemblysRepository).AsImplementedInterfaces().EnableInterfaceInterceptors();
+
+          //  builder.RegisterType<DemandBillOperation>().As<IBillOperation<Demand>>().EnableInterfaceInterceptors();
+
+            //services.AddScoped(typeof(IDemandBillOperation), typeof(DemandBillOperation)).en;
 
             //将services填充到Autofac容器生成器中
             builder.Populate(services);
+
+            //注册拦截器
+            builder.RegisterType<ServiceInterceptorAOP>();
 
             //使用已进行的组件登记创建新容器
             var ApplicationContainer = builder.Build();

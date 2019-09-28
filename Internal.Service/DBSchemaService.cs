@@ -25,7 +25,7 @@ namespace Internal.Service
 
         protected string SummaryLine(string summary)
         {
-            return $"/// <summary>\r\n/// {summary} \r\n/// <summary>";
+            return $"/// <summary>\r\n/// {summary} \r\n/// </summary>";
         }
         public async Task<string> DbToCSharp(string tableName)
         {
@@ -52,7 +52,7 @@ namespace Internal.Service
                 } 
                 stringBuilder.AppendTabLine($"\t/// <summary>");
                 stringBuilder.AppendTabLine($"\t/// {columnName}");
-                stringBuilder.AppendTabLine($"\t/// <summary>");
+                stringBuilder.AppendTabLine($"\t/// </summary>");
                 stringBuilder.AppendTabLine($"\tpublic {col.DataType.ShortName()}{nullable} {columnName} {{ get; set; }}");
                 
             } 

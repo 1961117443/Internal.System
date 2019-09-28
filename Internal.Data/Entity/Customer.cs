@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Internal.Data.Entity
 {
-   public  class Customer
+   public partial  class Customer
     {
         public Guid ID { get; set; }
         /// <summary>
@@ -15,5 +15,11 @@ namespace Internal.Data.Entity
         /// 客户名称
         /// </summary>
         public string Name { get; set; }
+         
     }
+    public partial class Customer
+    {
+        public Customer Parent { get; set; }
+    }
+
 }

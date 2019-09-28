@@ -217,5 +217,26 @@
             授权认证过滤器
             </summary>
         </member>
+        <member name="T:Internal.App.Filters.RecordLockAttribute">
+            <summary>
+            锁定记录拦截器
+            </summary>
+        </member>
+        <member name="P:Internal.App.Filters.RecordLockAttribute.Type">
+            <summary>
+            实体类型
+            </summary>
+        </member>
+        <member name="P:Internal.App.Filters.RecordLockAttribute.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="M:Internal.App.Filters.RecordLockAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary>
+            执行前
+            </summary>
+            <param name="context"></param>
+        </member>
     </members>
 </doc>

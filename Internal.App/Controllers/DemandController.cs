@@ -47,7 +47,7 @@ namespace Internal.App.Controllers
         [HttpGet("{id}")] 
         public async Task<IActionResult> Get(string id)
         {
-            var vd = await _demandService.QueryByID(id); 
+            var vd = await _demandService.QueryByIDAsync(id); 
             return ApiResult(vd);
         }
         /// <summary>
@@ -65,7 +65,7 @@ namespace Internal.App.Controllers
             demand.MakeDate = dt;
             demand.Maker = this.aspNetUser.Name;
 
-            int r = await _demandService.Add(demand);
+            int r = await _demandService.AddAsync(demand);
             return ApiResult(r>0? "提交成功！" : "提交失败！");
         }
 
@@ -79,7 +79,7 @@ namespace Internal.App.Controllers
        // [Authorize("CustomPermission")] 在基类处理
         public async Task<IActionResult> GetPageList(int pageIndex,int pageSize)
         {
-            var list = await _demandService.QueryPage(null,pageIndex,pageSize);
+            var list = await _demandService.QueryPageAsync(null,pageIndex,pageSize);
             var data = _mapper.Map<List<DemandCardModel>>(list);
             return ApiResult(data);
         }
@@ -100,12 +100,12 @@ namespace Internal.App.Controllers
                 res.Data = "需求不存在！";
                 return Ok(res);
             }
-            var demand = await _demandService.QueryByID(editModel.ID);
+            var demand = await _demandService.QueryByIDAsync(editModel.ID);
             demand.Describe = editModel.Describe;
             demand.Demander = editModel.Presenter;
             demand.InputDate = editModel.RecordDate;
 
-            bool r = await _demandService.Update(demand, new List<string>() { "Describe", "Presenter", "RecordDate" });
+            bool r = await _demandService.UpdateAsync(demand, new List<string>() { "Describe", "Presenter", "RecordDate" });
             if (r)
             {
                 res.Data = r ? "保存成功！" : "失败成功！";
@@ -122,7 +122,7 @@ namespace Internal.App.Controllers
         public async Task<IActionResult> Audit(string id)
         {
             var res = new ResultModel<DemandCardModel>();
-            var demand = await _demandService.QueryByID(id); 
+            var demand = await _demandService.QueryByIDAsync(id); 
             if (!demand.Audit.IsEmpty())
             {
                 res.Message = "需求已审核！";
@@ -137,8 +137,8 @@ namespace Internal.App.Controllers
             }
             demand.Audit = this.aspNetUser.Name;
             demand.AuditDate = DateTime.Now;
-            var r =await this._demandService.Update(demand);
-            if (await this._demandService.Update(demand))
+            var r =await this._demandService.UpdateAsync(demand);
+            if (await this._demandService.UpdateAsync(demand))
             {
                 res.Message = "审核成功！";
                 res.Data = this._mapper.Map<DemandCardModel>(demand); ;
@@ -171,7 +171,7 @@ namespace Internal.App.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var res = new ResultModel<string>();
-            res.Message = await _demandService.DeleteById(id) ? "删除成功！":"";
+            res.Message = await _demandService.DeleteByIdAsync(id) ? "删除成功！":"";
             return Ok(res);
         }
     }

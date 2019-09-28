@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Internal.Data.Entity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Internal.Data.ViewModel
 {
+
     public class DemandViewModel
     {/// <summary>
      /// 主键

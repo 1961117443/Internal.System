@@ -8,7 +8,5 @@ namespace Internal.IRepository
     public interface IDemandRepository : IBaseRepository<Demand>
     {
     }
-    //public interface IUserRepository : IBaseRepository<UserInfo>
-    //{
-    //}
+
 }

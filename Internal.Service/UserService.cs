@@ -26,7 +26,7 @@ namespace Internal.Service
 
         public async Task GetUserRole(string userId)
         {
-            List<SysRole> sysRoles = await _userRepository.GetUserRole(userId.toGuid()); 
+            List<SysRole> sysRoles = await _userRepository.GetUserRoleAsync(userId.toGuid()); 
         }
 
         public Task GetUserPermission(string userId)
@@ -37,7 +37,7 @@ namespace Internal.Service
         public async Task<CommunicationModel<UserInfo>> UserLogin(string code, string pwd)
         {
             CommunicationModel<UserInfo> communicationModel = new CommunicationModel<UserInfo>();
-            var users = await this._userRepository.Query(w => w.UserCode == code);
+            var users = await this._userRepository.QueryAsync(w => w.UserCode == code);
             if (!users.Any())
             {
                 communicationModel.Success = false;

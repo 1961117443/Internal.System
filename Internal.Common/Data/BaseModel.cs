@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Internal.Common.Core
+namespace Internal.Common.Data
 {
     /// <summary>
     /// 所有实体的基类
@@ -10,6 +10,6 @@ namespace Internal.Common.Core
     /// <typeparam name="T">主键类型</typeparam>
     public abstract class BaseModel<T>
     {
-       public  abstract T ID { get; set; }
+       public virtual T ID { get; set; }
     }
 }

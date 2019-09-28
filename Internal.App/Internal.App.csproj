@@ -14,6 +14,7 @@
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="4.5.0" />
     <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
+    <PackageReference Include="FreeSql" Version="0.10.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
@@ -24,8 +25,10 @@
     <ProjectReference Include="..\Internal.Common\Internal.Common.csproj" />
     <ProjectReference Include="..\Internal.Data\Internal.Data.csproj" />
     <ProjectReference Include="..\Internal.IService\Internal.IService.csproj" />
+    <ProjectReference Include="..\Internal.Repository.FreeSql\Internal.Repository.FreeSqlServer.csproj" />
     <ProjectReference Include="..\Internal.Repository.SqlServer\Internal.Repository.SqlServer.csproj" />
     <ProjectReference Include="..\Internal.Service\Internal.Service.csproj" />
+    <ProjectReference Include="..\Service\Admin.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

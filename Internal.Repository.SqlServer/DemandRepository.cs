@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
+using Internal.Data;
+using System.Threading.Tasks;
+using Internal.Data.ViewModel;
 
 namespace Internal.Repository.SqlServer
 {
@@ -17,9 +20,36 @@ namespace Internal.Repository.SqlServer
         protected override ISugarQueryable<Demand> GetSelect()
         {
             var q = Db.Queryable<Demand>()
-                .Mapper(e => e.Customer, e => e.ClientName);
+                .Mapper(e => e.Customer, e => e.ClientName)
+                .Mapper(e => e.ClientFile, e => e.ClientName); 
             return q;
         }
+
+        public List<TValue> QueryPageAsync<TValue>(Func<object, TValue> func)
+        {
+            List<TValue> list = new List<TValue>();
+
+            return list;
+        }
+
+        public override Task<List<Demand>> QueryPageAsync(PageParam pageParam)
+        {
+            List<IConditionalModel> conModels = new List<IConditionalModel>();
+            foreach (var item in pageParam.Params)
+            {
+                conModels.Add(new ConditionalModel() { FieldName = item.Field, ConditionalType = Enum.Parse<ConditionalType>(item.Logic.ToString()), FieldValue = item.Value });
+            }
+
+            var query= Db.Queryable<Demand, ClientFile>((t1, t2) => new object[] { JoinType.Left, t1.ClientName == t2.ID });
+            var model = query
+                .Select((t1,t2) => new ViewModelDemand() { BillCode = t1.BillCode, ClientName =t1.ClientName, ClientFileName = t2.ClientName, ID = t1.ID , Maker = t1.Maker })
+                .MergeTable()
+                .Where(conModels);
+            var data=model.ToPageList(pageParam.PageIndex, pageParam.PageSize);
+            var t = query.MergeTable();
+            return base.QueryPageAsync(pageParam);
+        }
+
         //protected override ISugarQueryable<Demand> GetQueryable()
         //{
         //    var q= base.GetQueryable();

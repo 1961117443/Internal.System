@@ -40,7 +40,7 @@ namespace Internal.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string id,int pageIndex)
         {
-            var list= await commentService.QueryPageEx(w => w.SubordinateID.Equals(id.toGuid()), pageIndex, 10,e=>e.CommentTime);
+            var list= await commentService.QueryPageExAsync(w => w.SubordinateID.Equals(id.toGuid()), pageIndex, 10,e=>e.CommentTime);
             ResultModel<List<CommentViewModel>> res = new ResultModel<List<CommentViewModel>>()
             {
                 Data = mapper.Map<List<CommentViewModel>>(list)
@@ -75,7 +75,7 @@ namespace Internal.App.Controllers
             var comment = this.mapper.Map<Comment>(viewModel);
             comment.Commentator = user.Name;
             comment.CommentTime = DateTime.Now; 
-            var r = await commentService.Add(comment);
+            var r = await commentService.AddAsync(comment);
             if (r>0)
             {
                 resultModel.Message = "发表成功！";

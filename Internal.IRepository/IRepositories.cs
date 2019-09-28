@@ -16,8 +16,8 @@ namespace Internal.IRepository
 
     public interface IUserRepository : IBaseRepository<UserInfo>
     {
-        Task<List<SysRole>> GetUserRole(Guid Id);
-        Task<List<SysPermission>> GetUserPermission(Guid Id);
+        Task<List<SysRole>> GetUserRoleAsync(Guid Id);
+        Task<List<SysPermission>> GetUserPermissionAsync(Guid Id);
     }
     public interface ISysRoleRepository : IBaseRepository<SysRole>
     {

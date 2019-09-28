@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using Internal.Common.Core;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,15 +11,12 @@ namespace Internal.Data.Entity
     /// NeedConfirm 
     /// <summary>
     [SugarTable("NeedConfirm")]
-    public partial class Demand
+    [FreeSql.DataAnnotations.Table(Name = "NeedConfirm")]
+    public partial class Demand: BaseModel<Guid>
     {
         /// <summary>
-		/// ID
-		/// <summary>
-		public Guid ID { get; set; }
-        /// <summary>
         /// RowNo
-        /// <summary>
+        /// </summary>
         public int RowNo { get; set; }
         /// <summary>
         /// Appointees
@@ -26,7 +24,7 @@ namespace Internal.Data.Entity
         public Guid Appointees { get; set; }
         /// <summary>
         /// Audit
-        /// <summary>
+        /// </summary>
         public string Audit { get; set; }
         /// <summary>
         /// AuditDate
@@ -35,6 +33,7 @@ namespace Internal.Data.Entity
         /// <summary>
         /// AutoID
         /// <summary>
+        [FreeSql.DataAnnotations.Column(IsIdentity = true)]
         public int AutoID { get; set; }
         /// <summary>
         /// BillCode

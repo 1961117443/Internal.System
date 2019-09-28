@@ -24,8 +24,15 @@ namespace Internal.Data
                 .ForMember(t => t.CustomerName, m => m.MapFrom(s => s.Customer.Name));
 
             CreateMap<Demand, DemandView>()
-                .ForMember(t => t.customerName, m => m.MapFrom(s => s.Customer.Name))
-                .ReverseMap();
+                .ForMember(t => t.ClientNameName, m => m.MapFrom(s => s.Customer.Name))
+                //.ForMember(t => t.customerName, m => m.MapFrom(s => s.Customer.Name))
+                .ReverseMap()
+               .ForPath(s => s.ClientFile.ClientName, m => m.MapFrom(t => t.ClientNameName));
+            CreateMap<Demand, ViewModelDemand>()
+               .ForMember(t => t.ClientFileName, m => m.MapFrom(s => s.Customer.Name))
+               .ReverseMap()
+               .ForPath(s => s.ClientFile.ClientName, m => m.MapFrom(t => t.ClientFileName));
+            CreateMap<Demand, Demand>();
             #endregion
 
             #region Comment 评论管理
