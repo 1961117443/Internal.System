@@ -44,12 +44,23 @@ namespace Internal.Data.Uility
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public static TEntity Clone<TEntity,T>(this BaseModel<T> entity) where TEntity:BaseModel<T>
+        public static TEntity Clone<TEntity,T>(this BaseModel<T> entity) where TEntity:BaseModel<T>,new()
         {
-             return (TEntity)Mapper.Instance.Map(entity, entity.GetType(), typeof(TEntity));
-            //return Mapper.Map<T,T>(entity);
+            TEntity data = new TEntity();
+             return (TEntity)Mapper.Instance.Map(entity, data, entity.GetType(), typeof(TEntity)); 
         }
 
- 
+        /// <summary>
+        /// 复制对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public static TEntity Clone<TEntity>(this TEntity entity) where TEntity : new()
+        {
+            TEntity data = new TEntity();
+            return (TEntity)Mapper.Instance.Map(entity, data, entity.GetType(), typeof(TEntity));
+        }
+
     }
 }

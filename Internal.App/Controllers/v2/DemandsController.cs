@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Internal.App.Controllers.v2
 {
+    using Admin.Dto.Demand;
     using AutoMapper;
     using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
     using Internal.App.Filters;
@@ -47,16 +48,18 @@ namespace Internal.App.Controllers.v2
         public async Task<IActionResult> GetList()
         {
             Demand entity = new Demand(); 
-            QueryField queryField = new QueryField();
-            queryField.FieldName = "ClientFile.ClientName";
 
             PageParam pageParam = new PageParam();
+            pageParam.Params.Add(new QueryParam("ClientFile.ClientName", "托田", LogicEnum.Like));
+            pageParam.Params.Add(new QueryParam("ClientFile.ClientName", "托田1", LogicEnum.NoLike));
+            pageParam.Params.Add(new QueryParam("ClientFile.ClientName", "营口", LogicEnum.LikeRight));
+            pageParam.Params.Add(new QueryParam("ClientFile.ClientName", "公司", LogicEnum.LikeLeft));
+            pageParam.Params.Add(new QueryParam("AutoID", "100", LogicEnum.GreaterThan));
+            pageParam.Params.Add(new QueryParam("InputDate", "2010-01-01", LogicEnum.GreaterThanOrEqual));
+            pageParam.Params.Add(new QueryParam("AutoID", "10000000.0", LogicEnum.LessThan));
+            pageParam.Params.Add(new QueryParam("AdditionalPoints", "10000.0", LogicEnum.LessThanOrEqual));
+            pageParam.Params.Add(new QueryParam("AdditionalPoints", "100.0", LogicEnum.NoEqual));
 
-            QueryParam param = new QueryParam();
-            param.Field = "ClientNameName";
-            param.Value = "托田";
-            param.Logic = LogicEnum.Like; 
-            pageParam.Params.Add(param);
             IEnumerable<Demand> data = await demandService.GetPageAsync(pageParam);
             ApiTableResult<DemandView> res = new ApiTableResult<DemandView>();
 
@@ -99,30 +102,22 @@ namespace Internal.App.Controllers.v2
 
         // PUT: api/Demands/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody]DemandView dto)
-        {
-            var affrowRes = await this.demandService.PostAffrowsAsync(dto);
-
+        public async Task<IActionResult> Put(string id, [FromBody]DemandDto dto)
+        {  
             ApiResult apiResult = new ApiResult();
             var source = await this.demandService.QueryByIDAsync(dto.Id);
-            // var exp1 = demand.UpdateExpression(dto);
-            ////dto创新一个新的entity
-            //var data2 = this.mapper.Map<Demand>(dto);
-            ////原来的entity复制到新的entity
-            //var newdata = this.mapper.Map(source, data2);
-            Demand copy = new Demand();
-            copy = this.mapper.Map(source, copy);
-            //var copy = source.Clone();
-            dto.AssignValuesToEntity(copy);
-
+            var copy = source.Clone();
+            //把view的数据复制到copy对象
+            copy= this.mapper.Map(dto, copy);
+           // dto.AssignValuesToEntity(copy);
+            //检查新旧对象的差异
             var exp1 = source.UpdateExpression(copy);
 
-            var b = await demandService.UpdateAsync(source);
-
-
-            var data = this.mapper.Map(dto, source);
-            var exp= source.UpdateExpression(dto);
-            var res = await billOperation.PostAsync(dto);
+            var b = await demandService.UpdateAsync(source, exp1);
+            if (!b)
+            {
+                apiResult.error_code = 50001;
+            } 
             return Ok(apiResult);
         }
 

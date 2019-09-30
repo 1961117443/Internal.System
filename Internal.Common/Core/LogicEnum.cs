@@ -14,7 +14,13 @@ namespace Internal.Common.Core
         LessThanOrEqual = 5,
         In = 6,
         NotIn = 7,
-        LikeLeft = 8,
+        /// <summary>
+        /// ***%
+        /// </summary>
+        LikeLeft = 8, 
+        /// <summary>
+        /// %***
+        /// </summary>
         LikeRight = 9,
         NoEqual = 10,
         IsNullOrEmpty = 11,

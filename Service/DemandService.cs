@@ -120,24 +120,18 @@ namespace Admin.Service
         public async Task<List<Demand>> GetPageAsync(PageParam param)
         {
             var query = this.Queryable
-               // .LeftJoin(a => a.ClientFile.ID == a.ClientName) 
-                .Page(param.PageIndex, param.PageSize);  
+                .LeftJoin(a => a.ClientFile.ID == a.ClientName) 
+                .Page(param.PageIndex, param.PageSize);
 
-            param.Params.Clear();
-            param.Params.Add(new QueryParam("ClientFile.ClientName", "托田", Internal.Common.Core.LogicEnum.Like));
-           // param.Params.Add(new QueryParam("InputDate", "2019-01-01", Internal.Common.Core.LogicEnum.GreaterThan));
+            var where = param.PageParamToExpression<Demand>();
+            query = query.WhereIf(where != null, where);
 
-            foreach (var p in param.Params)
-            {
-                var exp = p.ToExpression<Demand>();
-                if (exp != null)
-                {
-                    query = query.Where(exp);
-                }
-            }  
-            return await query.ToListAsync();
+            var selectExpression = EntityHelper<Demand>.GetQueryMember(); 
+
+            return selectExpression != null ? await query.ToListAsync(selectExpression) : await query.ToListAsync();
         }
 
+        [Obsolete]
         public async Task<int> UpdateAsync(Demand model,  string[] columns)
         {
             var updater = this.freeSql.Update<Demand>(model);
@@ -147,7 +141,11 @@ namespace Admin.Service
 
         public async Task<bool> UpdateAsync(Demand model, Expression<Func<Demand, Demand>> func)
         {
-            var updater = this.freeSql.Update<Demand>(model.ID).Set(func);
+            var updater = this.freeSql.Update<Demand>(model.ID);
+            if (func!=null)
+            {
+                updater = updater.Set(func);
+            }
             updater.Set(a => a.ModifyDate , DateTime.Now);
             int res = await updater.ExecuteAffrowsAsync();
             return res > 0; 

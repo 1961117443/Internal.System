@@ -1,4 +1,6 @@
-﻿using Internal.Data.Entity;
+﻿using Internal.Common;
+using Internal.Common.Helpers;
+using Internal.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +88,7 @@ namespace Internal.Data.Uility
             return expression;
         }
 
+        [Obsolete]
         private static Expression<Func<T, bool>> ToExpression<T>(ParameterExpression parameterExpression, Expression member, QueryParam queryParam)
         {
             if (parameterExpression==null)
@@ -157,6 +160,106 @@ namespace Internal.Data.Uility
             return null;
         }
 
+        /// <summary>
+        /// 把PageParam转成表达式目录树
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pageParam"></param>
+        /// <returns></returns>
+        public static Expression<Func<T,bool>> PageParamToExpression<T>(this PageParam pageParam)
+        {
+            Expression<Func<T, bool>> where = null;
+            foreach (var p in pageParam.Params)
+            {
+                var exp = p.QueryParamToExpression<T>();
+                if (exp != null)
+                {
+                    where = LambadaExpressionExtensions.And(where, exp); 
+                }
+            }
+            return where;
+        }
+        /// <summary>
+        /// 把查询参数转换成表达式目录树
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryParam"></param>
+        /// <returns></returns>
+        public static Expression<Func<T, bool>> QueryParamToExpression<T>(this QueryParam queryParam)
+        { 
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(T), "a");
+            Expression member = EntityHelper<T>.GetMemberExpression(parameterExpression, queryParam.Field); 
+            if (member == null)
+            {
+                return null;
+            }
+            //获取当前属性的类型
+            Type memberType = member.Type;
+            object constantValue = null;
+            //当前传入值的类型（实际查询的类型）
+            Type valueType = memberType.IsNullableType() ? memberType.GetGenericArguments().First() : memberType;
+
+            //int类型转double查询
+            if (valueType == typeof(int))
+            {
+                valueType = typeof(double);
+            }
+            //把查询的值转换为对应的值
+            constantValue = DataUtils.ChangeType(queryParam.Value, valueType);
+            Expression constant = Expression.Constant(constantValue, valueType);
+            //把参数类型转换一下
+            constant = Expression.Convert(constant, memberType);
+            Expression<Func<T, bool>> where = null;
+            switch (queryParam.Logic)
+            {
+                //等于
+                case Common.Core.LogicEnum.Equal:
+                    return Expression.Lambda<Func<T, bool>>(Expression.Equal(member, constant), parameterExpression);
+                //包含 右包含 左包含
+                case Common.Core.LogicEnum.Like:
+                case Common.Core.LogicEnum.NoLike:
+                case Common.Core.LogicEnum.LikeLeft: //右包含
+                case Common.Core.LogicEnum.LikeRight: //左包含
+                    {
+                        var method = queryParam.Logic.ToMethod();
+                        Expression mehtodCallExpression = Expression.Call(member, method, constant);
+                        //  mehtodCallExpression.Not()
+                        where = Expression.Lambda<Func<T, bool>>(mehtodCallExpression, parameterExpression);
+                        if (queryParam.Logic == Common.Core.LogicEnum.NoLike)
+                        {
+                            where = where.Not();
+                        }
+                        return where;
+                    }
+                //大于
+                case Common.Core.LogicEnum.GreaterThan:
+                    return Expression.Lambda<Func<T, bool>>(Expression.GreaterThan(member, constant), parameterExpression);
+                //大于等于
+                case Common.Core.LogicEnum.GreaterThanOrEqual:
+                    return Expression.Lambda<Func<T, bool>>(Expression.GreaterThanOrEqual(member, constant), parameterExpression);
+                //少于
+                case Common.Core.LogicEnum.LessThan:
+                    return Expression.Lambda<Func<T, bool>>(Expression.LessThan(member, constant), parameterExpression);
+                //少于等于
+                case Common.Core.LogicEnum.LessThanOrEqual:
+                    return Expression.Lambda<Func<T, bool>>(Expression.LessThanOrEqual(member, constant), parameterExpression);
+                // 
+                case Common.Core.LogicEnum.In:
+                    break;
+                case Common.Core.LogicEnum.NotIn:
+                    break;
+                //不等于
+                case Common.Core.LogicEnum.NoEqual:
+                    return Expression.Lambda<Func<T, bool>>(Expression.NotEqual(member, constant), parameterExpression);
+                case Common.Core.LogicEnum.IsNullOrEmpty:
+                    break;
+                case Common.Core.LogicEnum.IsNot:
+                    break; 
+            }
+            return null;
+        }
+
+        [Obsolete("请使用QueryParamToExpression代替")]
         public static Expression<Func<T, bool>> ToExpression<T>(this QueryParam queryParam)
         {
             var key = $"{typeof(T).FullName}.{queryParam.Field}";
@@ -167,7 +270,8 @@ namespace Internal.Data.Uility
                 {
                     if (!memberExpressionCache.ContainsKey(key))
                     {
-                        var exp = GetMemberExpression(parameterExpression, queryParam.Field);
+                        //var exp = GetMemberExpression(parameterExpression, queryParam.Field);
+                        var exp = EntityHelper<T>.GetMemberExpression(parameterExpression, queryParam.Field);
                         memberExpressionCache.Add(key, exp);
                     }
                 }
@@ -239,6 +343,7 @@ namespace Internal.Data.Uility
         /// <param name="parameterExpression"></param>
         /// <param name="fieldName"></param>
         /// <returns></returns>
+        [Obsolete("使用EntityHelper的GetMemberExpression代替")]
         public static MemberExpression GetMemberExpression(Expression parameterExpression, string fieldName)
         {
             int index = fieldName.IndexOf('.');
@@ -282,7 +387,7 @@ namespace Internal.Data.Uility
                             if (type!=null)
                             {
                                 ParameterExpression parameterExpression = Expression.Parameter(type, "a");
-                                expression = GetMemberExpression(parameterExpression, fieldName);
+                                expression =  GetMemberExpression(parameterExpression, fieldName);
                             } 
                         }
                         memberExpressionCache.Add(fullName, expression);

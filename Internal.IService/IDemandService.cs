@@ -16,7 +16,14 @@ namespace Internal.IService
 
         Task<List<Demand>> GetPageAsync(PageParam param);
 
+        [Obsolete]
         Task<int> UpdateAsync(Demand model, string[] columns);
+        /// <summary>
+        /// 更新实体对象，按需更新
+        /// </summary>
+        /// <param name="model">实体</param>
+        /// <param name="func">表达式目录树</param>
+        /// <returns></returns>
         Task<bool> UpdateAsync(Demand model, Expression<Func<Demand, Demand>> func);
 
         /// <summary>

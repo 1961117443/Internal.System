@@ -44,7 +44,7 @@ namespace Internal.IService
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<bool> UpdateAsync(TEntity model);
+        Task<bool> UpdateAsync(TEntity model); 
         /// <summary>
         /// 更新实体对象
         /// </summary>
