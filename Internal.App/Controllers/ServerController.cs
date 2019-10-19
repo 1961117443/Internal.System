@@ -18,9 +18,11 @@ namespace Internal.App.Controllers
     [ApiController]
     public class ServerController : ControllerBase
     {
-        public ServerController(IDBSchemaService schemaService)
+        public ServerController(IDBSchemaService schemaService, Service.QiniuService qiniuService, IBaseService<Data.ProductDiagram> productDiagramService)
         {
             this.schemaService = schemaService;
+            this.qiniuService = qiniuService;
+            this.productDiagramService = productDiagramService;
         }
         [HttpGet("api/server/encrypt")]
         public string Encrypt(string input, string key)
@@ -43,6 +45,8 @@ namespace Internal.App.Controllers
 
         private MethodInfo[] methods = typeof(Math).GetMethods();
         private readonly IDBSchemaService schemaService;
+        private readonly Service.QiniuService qiniuService;
+        private readonly IBaseService<Data.ProductDiagram> productDiagramService;
 
         [HttpPost("eval")]
         public object Eval(JObject jObject)
@@ -107,6 +111,22 @@ namespace Internal.App.Controllers
         {
            var data=await this.schemaService.DbToCSharp(tableName);
             return Ok(data);
+        }
+
+        /// <summary>
+        /// 获取表架构,转成json格式
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        [HttpGet("upload")]
+        public async Task<IActionResult> UploadImg()
+        {
+            var list = await productDiagramService.QueryPageAsync(1,5000);
+            foreach (var item in list)
+            {
+                await qiniuService.UploadData(item.ID.toShort(), item.Image);
+            } 
+            return Ok(new { });
         }
     }
 }

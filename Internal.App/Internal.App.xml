@@ -196,6 +196,13 @@
             <param name="tableName"></param>
             <returns></returns>
         </member>
+        <member name="M:Internal.App.Controllers.ServerController.UploadImg">
+            <summary>
+            获取表架构,转成json格式
+            </summary>
+            <param name="tableName"></param>
+            <returns></returns>
+        </member>
         <member name="P:Internal.App.Filters.PermissionRequirement.Count">
             <summary>
             访问次数

@@ -21,7 +21,9 @@ namespace Admin.Service
     {
         #region 属性 字段
         private readonly IFreeSql freeSql;
+        private readonly IFreeSql freeSql2;
         private readonly IMapper mapper;
+        private readonly IEnumerable<IFreeSql> freeSqls;
 
         protected ISelect<Demand> Queryable
         {
@@ -34,10 +36,11 @@ namespace Admin.Service
 
      
         #region 构造函数
-        public DemandService(IFreeSql freeSql,IMapper mapper)
-        {
+        public DemandService(IFreeSql freeSql,IMapper mapper, IFreeSqlFactory freeSqlFactory)
+        { 
             this.freeSql = freeSql;
-            this.mapper = mapper;
+            this.mapper = mapper; 
+            this.freeSql2 = freeSqlFactory.Build("server=192.168.31.138;uid=dev;pwd=dev+-*/86224155;database=FileData");
         }
 
         public DemandService()

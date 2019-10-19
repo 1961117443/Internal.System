@@ -56,11 +56,16 @@ namespace Internal.App
             services.AddSingleton<IRedisCacheManager, RedisCacheManager>();
             var freeSql = new FreeSql.FreeSqlBuilder()
                 .UseConnectionString(FreeSql.DataType.SqlServer, "server=.;uid=sa;pwd=123456;database=InternalDB")
-                //.UseAutoSyncStructure(true)
-                //.UseLazyLoading(true) 
+                .UseMonitorCommand(cmd => Trace.WriteLine(cmd.CommandText))
+                .Build();
+            var freeSql2 = new FreeSql.FreeSqlBuilder()
+                .UseConnectionString(FreeSql.DataType.SqlServer, "server=192.168.31.138;uid=dev;pwd=dev+-*/86224155;database=YongZhen_GZMModel")
                 .UseMonitorCommand(cmd => Trace.WriteLine(cmd.CommandText))
                 .Build();
             services.AddSingleton(typeof(IFreeSql), freeSql);
+            services.AddSingleton(typeof(IFreeSqlFactory), new FreeSqlFactory());
+            services.AddScoped(typeof(QiniuService));
+            services.AddScoped(typeof(QiniuService));
             #endregion
             #region 配置授权认证
             services
